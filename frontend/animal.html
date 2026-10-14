@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Питомец — Лапа Помощи</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .animal-detail { padding: 40px 0 80px; }
+        .animal-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .animal-img {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            object-fit: cover;
+        }
+        .animal-info { padding: 48px; text-align: left; }
+        .animal-info h1 { font-size: 48px; margin-bottom: 16px; }
+
+        .animal-meta {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--color-text-light);
+        }
+        .animal-meta span { display: flex; align-items: center; gap: 8px; }
+        .animal-meta i { color: var(--color-blue); }
+
+        .block-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--color-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .block-title i { color: var(--color-blue); font-size: 12px; }
+
+        .health-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .health-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .health-tag.yes { background: var(--color-green-light); color: var(--color-dark-green); }
+        .health-tag.no  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
+        .health-tag i   { font-size: 11px; }
+
+        .animal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+
+        .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .skill-tag.yes { background: var(--color-blue-light); color: var(--color-blue-dark); }
+        .skill-tag.no  { background: var(--color-sand-light); color: var(--color-sand-dark); }
+        .skill-tag i   { font-size: 11px; }
+
+        .medical-notes {
+            font-size: 15px;
+            color: var(--color-text-light);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .animal-desc {
+            font-size: 15px;
+            color: var(--color-text-light);
+            line-height: 1.8;
+            margin-bottom: 32px;
+            white-space: pre-line;
+        }
+
+        .animal-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding-top: 24px;
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        @media (max-width: 991px) {
+            .animal-info { padding: 32px 24px; }
+            .animal-info h1 { font-size: 32px; }
+            .animal-img { min-height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Открыть меню">
+                <i class="fa-solid fa-bars" style="color: var(--color-dark-green); font-size: 20px;" aria-hidden="true"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="catalog.html">Каталог</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html">О приюте</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="contacts.html">Контакты</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="donate.html">Помощь</a></li>
+                </ul>
+            </div>
+            <a class="btn-login d-none d-lg-inline-flex" href="account.html">
+                <i class="fa-regular fa-user" aria-hidden="true"></i> Кабинет
+                <span class="fav-counter" id="favCounter">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="page-header-gradient" style="padding: 60px 0 40px;">
+        <div class="container">
+            <span class="eyebrow">Карточка питомца</span>
+            <h1 class="page-title" id="pagePetName">Загрузка...</h1>
+            <p class="page-subtitle">Узнайте больше о питомце и оставьте заявку на усыновление</p>
+        </div>
+    </section>
+
+    <section class="animal-detail container">
+        <div class="animal-card">
+            <div class="row g-0">
+                <div class="col-lg-6">
+                    <img id="animalImg" class="animal-img" src="" alt="">
+                </div>
+                <div class="col-lg-6">
+                    <div class="animal-info">
+
+                        <div class="animal-meta" id="animalMeta"></div>
+
+                        <div class="block-title"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Здоровье</div>
+                        <div class="health-tags" id="healthTags"></div>
+
+                        <div class="animal-tags" id="animalTags"></div>
+
+                        <div class="block-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Навыки</div>
+                        <div class="skills-tags" id="skillsTags"></div>
+
+                        <div id="medicalBlock" style="display: none;">
+                            <div class="block-title"><i class="fa-solid fa-notes-medical" aria-hidden="true"></i> Медицинские заметки</div>
+                            <p class="medical-notes" id="medicalNotesText"></p>
+                        </div>
+
+                        <div class="block-title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Характер и история</div>
+                        <p class="animal-desc" id="animalDesc"></p>
+
+                        <div class="animal-actions">
+                            <button class="btn-primary-custom" onclick="openAdoptModal()">
+                                <i class="fa-solid fa-paw" aria-hidden="true"></i> Забрать домой
+                            </button>
+                            <a href="catalog.html" class="btn-outline-custom">
+                                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> В каталог
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="copyright-custom" style="margin-top: 0; border: none; padding-top: 0;">
+                &copy; 2026 Приют «Лапа Помощи». Все права защищены.
+                <a href="admin.html" class="admin-link">
+                    <i class="fa-solid fa-lock" style="font-size: 10px;" aria-hidden="true"></i> Вход для сотрудников
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="adoptModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('adoptModal')" aria-label="Закрыть">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <h3 class="modal-title">Заявка на усыновление</h3>
+            <p class="modal-subtitle">Питомец: <strong id="adoptPetName"></strong></p>
+
+            <div class="modal-input-group">
+                <label class="modal-label" for="adoptName">Ваше имя *</label>
+                <input type="text" class="modal-input" id="adoptName" placeholder="Иван Иванов">
+            </div>
+            <div class="modal-input-group">
+                <label class="modal-label" for="adoptEmail">Email *</label>
+                <input type="email" class="modal-input" id="adoptEmail" placeholder="example@mail.ru">
+            </div>
+            <div class="modal-input-group">
+                <label class="modal-label" for="adoptPhone">Телефон *</label>
+                <input type="tel" class="modal-input" id="adoptPhone" placeholder="+7 (___) ___-__-__">
+            </div>
+
+            <div class="modal-input-group">
+                <label class="modal-label" for="adoptHousing">Тип жилья</label>
+                <select class="modal-select" id="adoptHousing">
+                    <option value="">Выберите</option>
+                    <option value="Квартира">Квартира</option>
+                    <option value="Дом">Частный дом</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
+
+            <div class="modal-checkbox-group">
+                <input type="checkbox" id="adoptHasPets">
+                <label for="adoptHasPets">Есть другие питомцы</label>
+            </div>
+            <div class="modal-checkbox-group">
+                <input type="checkbox" id="adoptHasChildren">
+                <label for="adoptHasChildren">Есть дети</label>
+            </div>
+
+            <div class="modal-input-group">
+                <label class="modal-label" for="adoptMessage">Почему вы хотите забрать питомца?</label>
+                <textarea class="modal-textarea" id="adoptMessage" placeholder="Расскажите немного о себе"></textarea>
+            </div>
+
+            <button class="modal-submit blue" onclick="submitAdoption()">
+                <i class="fa-solid fa-paw" aria-hidden="true"></i> Отправить заявку
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3000';
+        let currentPet = null;
+
+        function showToast(text, type = 'success') {
+            const old = document.querySelector('.toast-notification');
+            if (old) old.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
+            const colors = { success: '#466840', error: '#E85A5A', info: '#96B8E4' };
+            toast.style.backgroundColor = colors[type] || colors.success;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}" aria-hidden="true"></i><span>${text}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 2800);
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; }
+        }
+
+        function getAgeWord(age) {
+            if (age === 1) return 'год';
+            if (age >= 2 && age <= 4) return 'года';
+            return 'лет';
+        }
+
+        function getAgeText(age) {
+            if (age < 1) return `${Math.round(age * 12)} мес.`;
+            return `${age} ${getAgeWord(age)}`;
+        }
+
+        function getFavorites() {
+            try { return JSON.parse(localStorage.getItem('lapa_favorites') || '[]'); }
+            catch (e) { return []; }
+        }
+
+        function saveFavorites(favs) {
+            localStorage.setItem('lapa_favorites', JSON.stringify(favs));
+        }
+
+        function updateFavCounter() {
+            const counter = document.getElementById('favCounter');
+            if (!counter) return;
+            const count = getFavorites().length;
+            counter.textContent = count;
+            counter.classList.toggle('visible', count > 0);
+        }
+
+        async function loadPet() {
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id'));
+
+            const res = await fetch(`${API_URL}/api/animals/${id}`);
+            if (!res.ok) {
+                document.getElementById('pagePetName').textContent = 'Не найдено';
+                return;
+            }
+
+            const pet = await res.json();
+            currentPet = pet;
+
+            document.getElementById('pagePetName').textContent = pet.name;
+            document.getElementById('animalImg').src = pet.img;
+            document.getElementById('animalImg').alt = pet.name;
+
+            // Мета-инфо. Порода показывается только если заполнена в базе
+            document.getElementById('animalMeta').innerHTML = `
+                <span><i class="fa-solid fa-dog" aria-hidden="true"></i> ${pet.species}</span>
+                ${pet.breed ? `<span><i class="fa-solid fa-bookmark" aria-hidden="true"></i> ${pet.breed}</span>` : ''}
+                <span><i class="fa-solid fa-venus-mars" aria-hidden="true"></i> ${pet.gender}</span>
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> ${getAgeText(pet.age)}</span>
+                <span><i class="fa-solid fa-ruler" aria-hidden="true"></i> ${pet.size} размер</span>
+            `;
+
+            const health = [
+                { ok: pet.is_vaccinated, label: 'Вакцинирован' },
+                { ok: pet.is_sterilized, label: 'Стерилизован' },
+                { ok: pet.is_chipped,    label: 'Чипирован' },
+                { ok: pet.is_dewormed,   label: 'Обработан от паразитов' }
+            ];
+            document.getElementById('healthTags').innerHTML = health.map(h => `
+                <span class="health-tag ${h.ok ? 'yes' : 'no'}">
+                    <i class="fa-solid ${h.ok ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> ${h.label}
+                </span>
+            `).join('');
+
+            const tags = pet.tags || [];
+            document.getElementById('animalTags').innerHTML = tags.map(t =>
+                `<span class="pet-tag green">${t}</span>`
+            ).join('');
+
+            const skills = [
+                { ok: pet.is_litter_trained, label: 'Приучен к лотку' },
+                { ok: pet.is_leash_trained,  label: 'Приучен к поводку' },
+                { ok: pet.is_house_trained,  label: 'Приучен к дому' }
+            ];
+            document.getElementById('skillsTags').innerHTML = skills.map(s => `
+                <span class="skill-tag ${s.ok ? 'yes' : 'no'}">
+                    <i class="fa-solid ${s.ok ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i> ${s.label}
+                </span>
+            `).join('');
+
+            if (pet.medical_notes) {
+                document.getElementById('medicalBlock').style.display = 'block';
+                document.getElementById('medicalNotesText').textContent = pet.medical_notes;
+            }
+
+            document.getElementById('animalDesc').textContent =
+                pet.description || `${pet.name} — прекрасный питомец.`;
+        }
+
+        function openAdoptModal() {
+            if (!currentPet) return;
+            document.getElementById('adoptPetName').textContent = currentPet.name;
+            document.getElementById('adoptHasPets').checked = false;
+            document.getElementById('adoptHasChildren').checked = false;
+            openModal('adoptModal');
+        }
+
+        async function submitAdoption() {
+            if (!currentPet) return;
+
+            const name        = document.getElementById('adoptName').value.trim();
+            const email       = document.getElementById('adoptEmail').value.trim();
+            const phone       = document.getElementById('adoptPhone').value.trim();
+            const housing     = document.getElementById('adoptHousing').value;
+            const hasPets     = document.getElementById('adoptHasPets').checked;
+            const hasChildren = document.getElementById('adoptHasChildren').checked;
+            const message     = document.getElementById('adoptMessage').value;
+
+            if (!name) { showToast('Укажите имя', 'error'); return; }
+            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
+            if (!phone) { showToast('Укажите телефон', 'error'); return; }
+
+            const user = JSON.parse(localStorage.getItem('lapa_user') || '{}');
+
+            try {
+                const res = await fetch(`${API_URL}/api/applications`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        animal_id: currentPet.id,
+                        user_id: user.id || null,
+                        name, email, phone,
+                        housing_type: housing,
+                        has_other_pets: hasPets,
+                        has_children: hasChildren,
+                        message
+                    })
+                });
+
+                if (!res.ok) {
+                    showToast('Ошибка при отправке', 'error');
+                    return;
+                }
+
+                closeModal('adoptModal');
+                showToast(`Заявка на ${currentPet.name} отправлена!`, 'success');
+
+                ['adoptName', 'adoptEmail', 'adoptPhone', 'adoptMessage'].forEach(id =>
+                    document.getElementById(id).value = ''
+                );
+                document.getElementById('adoptHousing').value = '';
+            } catch (err) {
+                showToast('Сервер не отвечает', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPet();
+            updateFavCounter();
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeModal(overlay.id);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
