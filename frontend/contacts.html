@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты — Лапа Помощи</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /*
+         * Сетка карточек с контактами: адрес, телефон, email.
+         * Три колонки на десктопе, одна — на планшете и телефоне.
+         */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .contact-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 40px 28px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        .contact-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        /* У каждой карточки свой цвет рамки при наведении */
+        .contact-card:nth-child(1):hover { border-color: var(--color-blue); }
+        .contact-card:nth-child(2):hover { border-color: var(--color-green); }
+        .contact-card:nth-child(3):hover { border-color: var(--color-sand); }
+
+        /* Квадратная иконка внутри карточки, три цветовых варианта */
+        .contact-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 28px;
+        }
+        .contact-icon.blue  { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+        .contact-icon.green { background: var(--color-green-light); color: var(--color-dark-green); }
+        .contact-icon.sand  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
+
+        .contact-card h4 { font-size: 20px; margin-bottom: 8px; }
+        .contact-card p  { font-size: 15px; color: var(--color-text-light); margin-bottom: 6px; }
+        .contact-card a  { color: var(--color-blue-dark); font-weight: 600; }
+        .contact-card a:hover { color: var(--color-dark-green); }
+
+        /*
+         * Обёртка вокруг карты: фиксированная высота, скруглённые углы.
+         * Внутри — iframe с OpenStreetMap.
+         */
+        .map-wrapper {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 40px;
+            height: 480px;
+            position: relative;
+            background: var(--color-bg-alt);
+            border: 4px solid var(--color-white);
+        }
+        .map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* Плашка с адресом поверх карты, слева вверху */
+        .map-badge {
+            position: absolute;
+            top: 20px; left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+            text-align: left;
+        }
+        .map-badge-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--color-green);
+            color: var(--color-dark-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .map-badge-text h4 { font-size: 15px; margin-bottom: 2px; font-family: var(--font-body); font-weight: 600; }
+        .map-badge-text p  { font-size: 12px; color: var(--color-muted); margin: 0; }
+
+        /* ---------- Форма обратной связи ---------- */
+        .form-section {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            box-shadow: var(--shadow-md);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Декоративная полоса сверху с градиентом из четырёх цветов сайта */
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--color-blue) 0%,
+                var(--color-green) 33%,
+                var(--color-sand) 66%,
+                var(--color-dark-green) 100%);
+        }
+        .form-section h2 { font-size: 32px; margin-bottom: 8px; text-align: center; }
+        .form-section .form-subtitle {
+            font-size: 14px;
+            color: var(--color-muted);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* Поля формы — единый стиль для input и textarea */
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-dark-green);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--color-border);
+            background: var(--color-bg);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: var(--color-blue);
+            background: var(--color-white);
+            box-shadow: 0 0 0 4px rgba(150, 184, 228, 0.15);
+        }
+        .form-textarea { resize: vertical; min-height: 140px; }
+
+        /* Две колонки для полей имя и email */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            border-radius: 50px;
+            border: none;
+            background: var(--color-blue);
+            color: var(--color-white);
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn-submit:hover {
+            background: var(--color-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        /*
+         * Адаптив.
+         * Планшет (до 991px) — карточки в одну колонку, форма сужается.
+         * Телефон (до 767px) — карта становится ниже.
+         */
+        @media (max-width: 991px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .form-section { padding: 32px 24px; }
+            .form-row { grid-template-columns: 1fr; }
+            .map-wrapper { height: 400px; }
+        }
+        @media (max-width: 767px) {
+            .map-wrapper { height: 320px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Открыть меню">
+                <i class="fa-solid fa-bars" style="color: var(--color-dark-green); font-size: 20px;" aria-hidden="true"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="catalog.html">Каталог</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html">О приюте</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="contacts.html">Контакты</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="donate.html">Помощь</a></li>
+                </ul>
+            </div>
+            <a class="btn-login d-none d-lg-inline-flex" href="account.html">
+                <i class="fa-regular fa-user" aria-hidden="true"></i> Кабинет
+                <span class="fav-counter" id="favCounter">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="page-header-gradient">
+        <div class="container">
+            <span class="eyebrow">Свяжитесь с нами</span>
+            <h1 class="page-title">Контакты</h1>
+            <p class="page-subtitle">Мы всегда рады помочь, ответить на вопросы и организовать встречу с питомцем</p>
+        </div>
+    </section>
+
+    <section class="container" style="padding-bottom: 40px;">
+        <!-- Три карточки: адрес, телефон, email -->
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon blue"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></div>
+                <h4>Адрес приюта</h4>
+                <p>г. Сыктывкар,<br>ул. Коммунистическая, д. 25</p>
+                <p style="font-size: 13px; margin-top: 12px;">Ежедневно с 10:00 до 19:00</p>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon green"><i class="fa-solid fa-phone" aria-hidden="true"></i></div>
+                <h4>Телефон</h4>
+                <p><a href="tel:+8212123456">+8 (212) 123-45-67</a></p>
+                <p style="font-size: 13px; margin-top: 12px;">Звонки принимаем с 9:00 до 21:00</p>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon sand"><i class="fa-solid fa-envelope" aria-hidden="true"></i></div>
+                <h4>Email</h4>
+                <p><a href="mailto:help@lapapomoshi.ru">help@lapapomoshi.ru</a></p>
+                <p style="font-size: 13px; margin-top: 12px;">Отвечаем в течение дня</p>
+            </div>
+        </div>
+
+        <!-- Карта с плашкой адреса -->
+        <div class="map-wrapper">
+            <div class="map-badge">
+                <div class="map-badge-icon"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i></div>
+                <div class="map-badge-text">
+                    <h4>Мы в Сыктывкаре</h4>
+                    <p>ул. Коммунистическая, д. 25</p>
+                </div>
+            </div>
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=50.7800%2C61.6600%2C50.8600%2C61.6900&layer=mapnik&marker=61.6688%2C50.8364" loading="lazy" allowfullscreen title="Карта приюта в Сыктывкаре"></iframe>
+        </div>
+
+        <!-- Форма обратной связи -->
+        <div class="form-section">
+            <h2>Напишите нам</h2>
+            <p class="form-subtitle">Оставьте сообщение — мы ответим в ближайшее время</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="contactName">Ваше имя</label>
+                    <input type="text" class="form-input" id="contactName" placeholder="Как к вам обращаться">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="contactEmail">Email</label>
+                    <input type="email" class="form-input" id="contactEmail" placeholder="example@mail.ru">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactSubject">Тема обращения</label>
+                <input type="text" class="form-input" id="contactSubject" placeholder="Например: хочу забрать питомца">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactMessage">Сообщение</label>
+                <textarea class="form-textarea" id="contactMessage" placeholder="Ваш вопрос или предложение"></textarea>
+            </div>
+
+            <button class="btn-submit" onclick="sendMessage()">
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Отправить сообщение
+            </button>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="copyright-custom" style="margin-top: 0; border: none; padding-top: 0;">
+                &copy; 2026 Приют «Лапа Помощи». Все права защищены.
+                <a href="admin.html" class="admin-link">
+                    <i class="fa-solid fa-lock" style="font-size: 10px;" aria-hidden="true"></i> Вход для сотрудников
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* Базовый адрес API. При деплое заменить на публичный URL бэкенда */
+        const API_URL = 'http://localhost:3000';
+
+        /*
+         * Возвращает массив id избранных животных из localStorage.
+         * При повреждённом JSON возвращает пустой массив,
+         * чтобы код не падал на парсинге.
+         */
+        function getFavorites() {
+            try {
+                return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        /*
+         * Обновляет счётчик избранного в шапке сайта.
+         * Класс visible добавляется только при count > 0 — так счётчик
+         * не отображается, если избранное пустое.
+         */
+        function updateFavCounter() {
+            const counter = document.getElementById('favCounter');
+            if (!counter) return;
+            const count = getFavorites().length;
+            counter.textContent = count;
+            counter.classList.toggle('visible', count > 0);
+        }
+
+        /*
+         * Всплывающее уведомление в углу экрана.
+         * Перекрывает предыдущее, если оно ещё не исчезло.
+         * type: success / error / info — задаёт иконку и цвет.
+         */
+        function showToast(text, type = 'success') {
+            const old = document.querySelector('.toast-notification');
+            if (old) old.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
+            const colors = { success: '#466840', error: '#E85A5A', info: '#96B8E4' };
+            toast.style.backgroundColor = colors[type] || colors.success;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}" aria-hidden="true"></i><span>${text}</span>`;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 2800);
+        }
+
+        /*
+         * Отправляет сообщение с формы обратной связи.
+         * Проверяет обязательные поля, отправляет POST на /api/contacts.
+         * При успехе — очищает поля формы и показывает уведомление.
+         */
+        async function sendMessage() {
+            const name    = document.getElementById('contactName').value.trim();
+            const email   = document.getElementById('contactEmail').value.trim();
+            const subject = document.getElementById('contactSubject').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+
+            if (!name) { showToast('Укажите имя', 'error'); return; }
+            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
+            if (!message) { showToast('Напишите сообщение', 'error'); return; }
+
+            try {
+                const res = await fetch(`${API_URL}/api/contacts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, subject, message })
+                });
+
+                if (!res.ok) {
+                    showToast('Ошибка при отправке', 'error');
+                    return;
+                }
+
+                showToast(`Спасибо, ${name}! Мы ответим на ${email}`, 'success');
+
+                ['contactName', 'contactEmail', 'contactSubject', 'contactMessage'].forEach(id =>
+                    document.getElementById(id).value = ''
+                );
+            } catch (err) {
+                showToast('Сервер не отвечает', 'error');
+            }
+        }
+
+        /* Счётчик избранного обновляется один раз при загрузке страницы */
+        document.addEventListener('DOMContentLoaded', updateFavCounter);
+    </script>
+</body>
+</html>
