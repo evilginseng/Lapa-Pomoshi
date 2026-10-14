@@ -82,7 +82,7 @@
             margin-top: 8px;
         }
 
-        /* Одно большое фото в рамке */
+        /* ОДНА большая картинка на всю рамку — без пустых полос */
         .hero-img-main {
             position: relative;
             height: 100%;
@@ -92,13 +92,22 @@
             box-shadow: var(--shadow-xl);
             z-index: 1;
         }
-        .hero-img-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero-img-main > img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
         .hero-img-main::after {
             content: '';
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 100%);
+            height: 55%;
+            background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
         }
 
         .hero-badge {
@@ -112,7 +121,7 @@
             align-items: center;
             gap: 16px;
             box-shadow: var(--shadow-md);
-            z-index: 2;
+            z-index: 3;
             text-align: left;
         }
         .hero-badge-icon {
