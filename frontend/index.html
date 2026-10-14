@@ -82,6 +82,7 @@
             margin-top: 8px;
         }
 
+        /* Одно большое фото в рамке */
         .hero-img-main {
             position: relative;
             height: 100%;
@@ -99,20 +100,6 @@
             height: 50%;
             background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 100%);
         }
-
-        .hero-img-small {
-            position: absolute;
-            width: 140px;
-            height: 140px;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            border: 4px solid var(--color-white);
-            z-index: 2;
-        }
-        .hero-img-small img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-img-small.top-left { top: -20px; left: -20px; }
-        .hero-img-small.bottom-right { bottom: -20px; right: -20px; }
 
         .hero-badge {
             position: absolute;
@@ -497,14 +484,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="hero-img-main">
-                            <!-- Вставь сюда своё большое фото: <img src="img/hero-main.jpg" alt="..."> -->
                             <img src="https://avatars.mds.yandex.net/i?id=9d06603fb91ce31639ed1af804f500cc_l-7673608-images-thumbs&n=13" alt="Питомец">
-                            <div class="hero-img-small top-left">
-                                
-                            </div>
-                            <div class="hero-img-small bottom-right">
-                                
-                            </div>
                             <div class="hero-badge">
                                 <div class="hero-badge-icon"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i></div>
                                 <div class="hero-badge-text">
@@ -612,27 +592,21 @@
                 <p class="bento-subtitle">Узнайте, чем живёт наш приют, и присоединяйтесь к добрым делам</p>
             </div>
             <div class="bento-grid">
-                <!-- История Локи — вставь своё фото в background-image -->
                 <a href="catalog.html" class="bento-item large-left" style="background-image: url('https://i.pinimg.com/1200x/5e/7c/55/5e7c551fb5d32a9105c12ba0ff70dfc0.jpg');">
                     <div class="bento-content"><span class="bento-tag blue">История успеха</span><h3>Как Локи нашёл семью</h3><p>Пёс из приюта стал лучшим другом для семьи</p></div>
                 </a>
-                <!-- Новые поступления -->
                 <a href="catalog.html" class="bento-item small-top" style="background-image: url('https://assets.newsweek.com/wp-content/uploads/2025/08/2620309-dog-cat.jpg?w=1600&quality=80&webp=1');">
                     <div class="bento-content"><span class="bento-tag green">Новости</span><h3>Новые поступления</h3></div>
                 </a>
-                <!-- День открытых дверей -->
                 <a href="contacts.html" class="bento-item small-bottom" style="background-image: url('https://i.pinimg.com/1200x/60/17/ea/6017ea6392bc716855c5690438140e91.jpg');">
                     <div class="bento-content"><span class="bento-tag sand">События</span><h3>День открытых дверей</h3></div>
                 </a>
-                <!-- Что-то интересное -->
                 <a href="about.html" class="bento-item empty-box" style="background-image: url('https://i.pinimg.com/736x/dc/6b/d1/dc6bd15f823c066b82a01973945b101e.jpg');">
                     <div class="bento-content" style="text-align: center; width: 100%;"><span class="bento-tag">Скоро</span><h3 style="font-size: 18px;">Что-то интересное</h3><p>Следите за новостями</p></div>
                 </a>
-                <!-- Зелёная карточка-кнопка (без фото) -->
                 <a href="catalog.html" class="bento-item accent-green">
                     <div class="accent-inner"><i class="fa-solid fa-paw" aria-hidden="true"></i><h3>Смотреть всех животных</h3><span class="accent-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
                 </a>
-                <!-- Присоединяйтесь к команде -->
                 <a href="donate.html" class="bento-item large-right" style="background-image: url('https://static.tildacdn.com/tild6663-6230-4439-b139-353861376235/DSC_2195.jpg');">
                     <div class="bento-content"><span class="bento-tag">Волонтёрство</span><h3>Присоединяйтесь к команде</h3><p>Помогите нам заботиться о животных</p></div>
                 </a>
