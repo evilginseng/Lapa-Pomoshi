@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Помощь приюту — Лапа Помощи</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /*
+         * Форма пожертвования и блок с информацией.
+         * Слева — форма и данные карты, справа — список "куда идут деньги" и итоговая сумма.
+         */
+        .donation-wrapper {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 32px;
+            align-items: start;
+            text-align: left;
+        }
+        .donation-card {
+            background: var(--color-white);
+            border-radius: var(--radius-xl);
+            padding: 56px 48px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Декоративная полоса сверху с градиентом из четырёх цветов сайта */
+        .donation-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--color-blue) 0%,
+                var(--color-green) 33%,
+                var(--color-sand) 66%,
+                var(--color-dark-green) 100%);
+        }
+        .donation-card h2 { font-size: 34px; margin-bottom: 8px; text-align: center; }
+        .donation-subtitle {
+            font-size: 15px;
+            color: var(--color-muted);
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        /* Сетка кнопок с готовыми суммами */
+        .amounts-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .amount-btn {
+            padding: 20px 12px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--color-border);
+            background: var(--color-bg);
+            font-family: var(--font-body);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-dark-green);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .amount-btn:hover,
+        .amount-btn.active {
+            background: var(--color-sand);
+            border-color: var(--color-sand);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sand);
+        }
+
+        /* Поля формы */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-dark-green);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--color-border);
+            background: var(--color-bg);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: var(--color-blue);
+            background: var(--color-white);
+            box-shadow: 0 0 0 4px rgba(150, 184, 228, 0.15);
+        }
+        .form-textarea { resize: vertical; min-height: 100px; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            border-radius: 50px;
+            border: none;
+            background: var(--color-sand);
+            color: var(--color-dark-green);
+            font-family: var(--font-body);
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .btn-submit:hover {
+            background: var(--color-sand-dark);
+            color: var(--color-white);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sand);
+        }
+
+        /* ---------- Правый блок с информацией ---------- */
+        .donation-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /*
+         * Карточка информации — размер как у total-block,
+         * чтобы визуально они смотрелись в одном ряду.
+         */
+        .info-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            text-align: left;
+            border-left: 4px solid transparent;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .info-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .info-card:nth-child(1) { border-left-color: var(--color-blue); }
+        .info-card:nth-child(2) { border-left-color: var(--color-green); }
+        .info-card:nth-child(3) { border-left-color: var(--color-sand); }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .info-icon.blue  { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+        .info-icon.green { background: var(--color-green-light); color: var(--color-dark-green); }
+        .info-icon.sand  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
+
+        /* Текстовый блок: заголовок и описание в столбик */
+        .info-text { display: flex; flex-direction: column; gap: 4px; }
+        .info-card h4 {
+            font-size: 20px;
+            margin: 0;
+            font-family: var(--font-heading);
+            color: var(--color-dark-green);
+            line-height: 1.2;
+        }
+        .info-card p {
+            font-size: 15px;
+            color: var(--color-text-light);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Тёмный блок с итоговой суммой */
+        .total-block {
+            background: linear-gradient(135deg, var(--color-dark-green) 0%, #3a5735 100%);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            color: var(--color-white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .total-block::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(150, 184, 228, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .total-block > * { position: relative; z-index: 2; }
+        .total-block .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--color-sand);
+            margin-bottom: 8px;
+        }
+        .total-block .value {
+            font-family: var(--font-heading);
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--color-white);
+            line-height: 1;
+        }
+        .total-block .value span { font-size: 22px; font-weight: 500; opacity: 0.7; }
+
+        /* ---------- Блок "Ваш вклад в цифрах" ---------- */
+        .impact-section {
+            padding: 80px 0;
+            background: var(--color-bg-alt);
+            position: relative;
+            overflow: hidden;
+        }
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .impact-card {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+        }
+        .impact-card:nth-child(1) { border-top-color: var(--color-blue); }
+        .impact-card:nth-child(2) { border-top-color: var(--color-green); }
+        .impact-card:nth-child(3) { border-top-color: var(--color-sand); }
+        .impact-card:nth-child(4) { border-top-color: var(--color-dark-green); }
+        .impact-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .impact-card .num {
+            font-family: var(--font-heading);
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+        .impact-card:nth-child(1) .num { color: var(--color-blue-dark); }
+        .impact-card:nth-child(2) .num { color: var(--color-green-dark); }
+        .impact-card:nth-child(3) .num { color: var(--color-sand-dark); }
+        .impact-card:nth-child(4) .num { color: var(--color-dark-green); }
+        .impact-card .label {
+            font-size: 13px;
+            color: var(--color-text-light);
+            line-height: 1.5;
+        }
+
+        /*
+         * Адаптив.
+         * Планшет (до 1199px) — блоки в одну колонку, карточки идут в строку.
+         * Планшет поменьше (до 991px) — форма сужается, цифры в две колонки.
+         * Телефон (до 767px) — всё в одну колонку, кнопки сумм в два ряда.
+         */
+        @media (max-width: 1199px) {
+            .donation-wrapper { grid-template-columns: 1fr; }
+            .donation-info { flex-direction: row; flex-wrap: wrap; }
+            .info-card { flex: 1 1 30%; min-width: 280px; }
+            .total-block { flex: 1 1 100%; }
+        }
+        @media (max-width: 991px) {
+            .donation-card { padding: 40px 32px; }
+            .impact-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 767px) {
+            .donation-card { padding: 32px 24px; }
+            .amounts-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-row { grid-template-columns: 1fr; }
+            .impact-grid { grid-template-columns: 1fr; }
+            .info-card { flex: 1 1 100%; }
+            .donation-card h2 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Открыть меню">
+                <i class="fa-solid fa-bars" style="color: var(--color-dark-green); font-size: 20px;" aria-hidden="true"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="catalog.html">Каталог</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html">О приюте</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="contacts.html">Контакты</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="donate.html">Помощь</a></li>
+                </ul>
+            </div>
+            <a class="btn-login d-none d-lg-inline-flex" href="account.html">
+                <i class="fa-regular fa-user" aria-hidden="true"></i> Кабинет
+                <span class="fav-counter" id="favCounter">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="page-header-gradient">
+        <div class="container">
+            <span class="eyebrow">Поддержите приют</span>
+            <h1 class="page-title">Ваша помощь меняет жизни</h1>
+            <p class="page-subtitle">Каждое пожертвование помогает нам кормить, лечить и находить дом для животных</p>
+        </div>
+    </section>
+
+    <section class="container" style="padding-bottom: 80px;">
+        <div class="donation-wrapper">
+
+            <!-- Левая колонка: форма пожертвования -->
+            <div class="donation-card">
+                <h2>Сделать пожертвование</h2>
+                <p class="donation-subtitle">Выберите сумму или введите свою</p>
+
+                <div class="amounts-grid">
+                    <button class="amount-btn" onclick="selectAmount(this, 300)">300 ₽</button>
+                    <button class="amount-btn" onclick="selectAmount(this, 500)">500 ₽</button>
+                    <button class="amount-btn" onclick="selectAmount(this, 1000)">1000 ₽</button>
+                    <button class="amount-btn" onclick="selectAmount(this, 3000)">3000 ₽</button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="donateAmount">Сумма (₽)</label>
+                        <input type="number" class="form-input" id="donateAmount" placeholder="Введите сумму" min="1" oninput="updateTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="donateName">Ваше имя</label>
+                        <input type="text" class="form-input" id="donateName" placeholder="Как к вам обращаться">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="donateEmail">Email</label>
+                    <input type="email" class="form-input" id="donateEmail" placeholder="example@mail.ru">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="donateMessage">Сообщение (необязательно)</label>
+                    <textarea class="form-textarea" id="donateMessage" placeholder="Пожелание или комментарий"></textarea>
+                </div>
+
+                <!-- Заголовок блока данных карты, отделён пунктиром -->
+                <div style="font-family: 'Lora', serif; font-size: 16px; font-weight: 600; color: var(--color-dark-green); margin: 22px 0 14px; padding-top: 18px; border-top: 1px dashed rgba(0,0,0,.12); display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-credit-card" style="color: var(--color-blue);" aria-hidden="true"></i> Данные карты
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cardNumber">Номер карты *</label>
+                    <input type="text" class="form-input" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" inputmode="numeric" autocomplete="cc-number">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="cardExpiry">Срок действия *</label>
+                        <input type="text" class="form-input" id="cardExpiry" placeholder="ММ/ГГ" maxlength="5" inputmode="numeric" autocomplete="cc-exp">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cardCvv">CVV *</label>
+                        <input type="password" class="form-input" id="cardCvv" placeholder="•••" maxlength="3" inputmode="numeric" autocomplete="cc-csc">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cardHolder">Имя держателя карты *</label>
+                    <input type="text" class="form-input" id="cardHolder" placeholder="IVAN IVANOV" autocomplete="cc-name">
+                </div>
+
+                <button class="btn-submit" onclick="submitDonation()">
+                    <i class="fa-solid fa-heart" aria-hidden="true"></i> Пожертвовать
+                </button>
+            </div>
+
+            <!-- Правая колонка: сумма и информация, куда идут деньги -->
+            <div class="donation-info">
+                <div class="total-block">
+                    <div class="label">Ваш вклад</div>
+                    <div class="value"><span id="totalValue">0</span> <span>₽</span></div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon blue"><i class="fa-solid fa-bowl-food" aria-hidden="true"></i></div>
+                    <div class="info-text">
+                        <h4>Кормление</h4>
+                        <p>500 ₽ — недельный запас корма для одного питомца</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon green"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i></div>
+                    <div class="info-text">
+                        <h4>Лечение</h4>
+                        <p>1500 ₽ — осмотр ветеринара и базовые процедуры</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon sand"><i class="fa-solid fa-house-chimney" aria-hidden="true"></i></div>
+                    <div class="info-text">
+                        <h4>Обустройство</h4>
+                        <p>3000 ₽ — тёплое место и игрушки для питомца</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="impact-section">
+        <div class="container">
+            <span class="eyebrow">Что мы делаем вместе</span>
+            <h2 class="section-title">Ваш вклад в цифрах</h2>
+            <p class="section-subtitle">Благодаря вашим пожертвованиям мы каждый день помогаем животным</p>
+            <div class="impact-grid">
+                <div class="impact-card"><div class="num">500+</div><div class="label">Спасённых жизней с 2021 года</div></div>
+                <div class="impact-card"><div class="num">124</div><div class="label">Нашли дом в 2026 году</div></div>
+                <div class="impact-card"><div class="num">200+</div><div class="label">Питомцев сейчас в приюте</div></div>
+                <div class="impact-card"><div class="num">50+</div><div class="label">Волонтёров и кураторов</div></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="copyright-custom" style="margin-top: 0; border: none; padding-top: 0;">
+                &copy; 2026 Приют «Лапа Помощи». Все права защищены.
+                <a href="admin.html" class="admin-link">
+                    <i class="fa-solid fa-lock" style="font-size: 10px;" aria-hidden="true"></i> Вход для сотрудников
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /*
+         * Возвращает массив id избранных животных из localStorage.
+         * При повреждённом JSON возвращает пустой массив.
+         */
+        function getFavorites() {
+            try {
+                return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        /* Обновляет счётчик избранного в шапке сайта */
+        function updateFavCounter() {
+            const counter = document.getElementById('favCounter');
+            if (!counter) return;
+            const count = getFavorites().length;
+            counter.textContent = count;
+            counter.classList.toggle('visible', count > 0);
+        }
+
+        /*
+         * Всплывающее уведомление в углу экрана.
+         * Перекрывает предыдущее, если оно ещё не исчезло.
+         */
+        function showToast(text, type = 'success') {
+            const old = document.querySelector('.toast-notification');
+            if (old) old.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
+            const colors = { success: '#466840', error: '#E85A5A', info: '#96B8E4' };
+            toast.style.backgroundColor = colors[type] || colors.success;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}" aria-hidden="true"></i><span>${text}</span>`;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 2800);
+        }
+
+        /* Обрабатывает клик по кнопке с готовой суммой: подставляет её в поле и обновляет итог */
+        function selectAmount(btn, amount) {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('donateAmount').value = amount;
+            updateTotal();
+        }
+
+        /* Пересчитывает и выводит итоговую сумму с разделителями тысяч */
+        function updateTotal() {
+            const value = document.getElementById('donateAmount').value || 0;
+            document.getElementById('totalValue').textContent =
+                parseInt(value).toLocaleString('ru-RU') || 0;
+        }
+
+        /*
+         * Отправляет пожертвование.
+         * Проверяет обязательные поля, формат карты и срок действия.
+         * Сохраняет данные в localStorage, маскируя номер карты до последних 4 цифр.
+         * Реальная отправка на сервер здесь не выполняется — это учебная имитация.
+         */
+        function submitDonation() {
+            const amount = document.getElementById('donateAmount').value;
+            const name   = document.getElementById('donateName').value.trim();
+            const email  = document.getElementById('donateEmail').value.trim();
+
+            // Данные карты
+            const cardNumberRaw = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+            const cardExpiry    = document.getElementById('cardExpiry').value.trim();
+            const cardCvv       = document.getElementById('cardCvv').value.trim();
+            const cardHolder    = document.getElementById('cardHolder').value.trim().toUpperCase();
+
+            // Валидация основных полей
+            if (!amount || amount <= 0) { showToast('Укажите сумму', 'error'); return; }
+            if (!name) { showToast('Укажите имя', 'error'); return; }
+            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
+
+            // Валидация карты
+            if (!/^\d{16}$/.test(cardNumberRaw)) { showToast('Номер карты — 16 цифр', 'error'); return; }
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry)) { showToast('Срок действия в формате ММ/ГГ', 'error'); return; }
+            if (!/^\d{3}$/.test(cardCvv)) { showToast('CVV — 3 цифры', 'error'); return; }
+            if (cardHolder.length < 3) { showToast('Укажите имя держателя карты', 'error'); return; }
+
+            // Проверка, что срок действия карты не истёк
+            const [mm, yy] = cardExpiry.split('/').map(Number);
+            const now = new Date();
+            const expDate = new Date(2000 + yy, mm, 0);
+            if (expDate < now) { showToast('Срок действия карты истёк', 'error'); return; }
+
+            // Сохраняем пожертвование в localStorage. Номер карты маскируем.
+            try {
+                const donations = JSON.parse(localStorage.getItem('lapa_donations') || '[]');
+                donations.push({
+                    amount: Number(amount),
+                    name, email,
+                    message: document.getElementById('donateMessage').value,
+                    payment: {
+                        cardLast4: cardNumberRaw.slice(-4),
+                        cardHolder,
+                        cardExpiry
+                    },
+                    createdAt: new Date().toISOString()
+                });
+                localStorage.setItem('lapa_donations', JSON.stringify(donations));
+            } catch (e) {}
+
+            showToast(`Спасибо, ${name}! Пожертвование ${amount} ₽ принято`, 'success');
+
+            ['donateAmount', 'donateName', 'donateEmail', 'donateMessage',
+             'cardNumber', 'cardExpiry', 'cardCvv', 'cardHolder']
+                .forEach(id => document.getElementById(id).value = '');
+
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+            updateTotal();
+        }
+
+        /*
+         * Инициализация страницы:
+         * 1. Обнуляет итоговую сумму и обновляет счётчик избранного.
+         * 2. Ставит маски на поля карты — номер форматируется группами по 4, срок — ММ/ГГ, CVV — только цифры.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTotal();
+            updateFavCounter();
+
+            // Маска номера карты: 0000 0000 0000 0000
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+                    e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+                });
+            }
+
+            // Маска срока действия: ММ/ГГ
+            const cardExpiryInput = document.getElementById('cardExpiry');
+            if (cardExpiryInput) {
+                cardExpiryInput.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    if (v.length >= 3) v = v.slice(0, 2) + '/' + v.slice(2);
+                    e.target.value = v;
+                });
+            }
+
+            // CVV — только цифры, максимум 3
+            const cardCvvInput = document.getElementById('cardCvv');
+            if (cardCvvInput) {
+                cardCvvInput.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
