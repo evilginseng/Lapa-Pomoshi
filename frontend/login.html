@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — Лапа Помощи</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /*
+         * Страница авторизации: форма входа и регистрации.
+         * Контент центрируется по вертикали и горизонтали, фон — градиент.
+         */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #F7F4F0 0%, #E8EFF8 50%, #F7E7CD 100%);
+        }
+        .auth-container { width: 100%; max-width: 460px; }
+
+        /* Логотип и название приюта над формой */
+        .auth-logo { text-align: center; margin-bottom: 32px; }
+        .auth-logo a { display: inline-flex; align-items: center; gap: 12px; }
+        .auth-logo .brand-mark {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            font-size: 24px;
+        }
+        .auth-logo .brand-text {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-dark-green);
+            line-height: 1;
+            text-align: left;
+        }
+        .auth-logo .brand-text small {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            margin-top: 4px;
+        }
+
+        /* Белая карточка с формой */
+        .auth-box {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 48px 40px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Декоративная полоса сверху с градиентом из четырёх цветов сайта */
+        .auth-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--color-blue) 0%,
+                var(--color-green) 33%,
+                var(--color-sand) 66%,
+                var(--color-dark-green) 100%);
+        }
+
+        /* Переключатель между входом и регистрацией */
+        .auth-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--color-bg);
+            padding: 6px;
+            border-radius: 50px;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .auth-tab.active {
+            background: var(--color-white);
+            color: var(--color-dark-green);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Заголовок и подпись над полями ввода */
+        .auth-title { font-size: 28px; margin-bottom: 8px; text-align: center; }
+        .auth-subtitle {
+            font-size: 14px;
+            color: var(--color-muted);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* ---------- Поля формы ---------- */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-dark-green);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--color-border);
+            background: var(--color-bg);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: var(--color-blue);
+            background: var(--color-white);
+            box-shadow: 0 0 0 4px rgba(150, 184, 228, 0.15);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            border-radius: 50px;
+            border: none;
+            background: var(--color-blue);
+            color: var(--color-white);
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn-submit:hover {
+            background: var(--color-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        /* Подсказка под кнопкой — "уже есть аккаунт" и т.п. */
+        .auth-hint {
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-muted);
+            margin-top: 20px;
+        }
+        .auth-hint a { color: var(--color-blue-dark); font-weight: 600; }
+
+        /* Ссылка "на главную" под карточкой */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--color-dark-green);
+            font-weight: 500;
+            margin-top: 24px;
+            text-align: center;
+        }
+        .back-link:hover { color: var(--color-blue-dark); }
+
+        /* Скрывает неактивную форму — вход или регистрацию */
+        .form-hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-logo">
+            <a href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+        </div>
+
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Вход</button>
+                <button class="auth-tab" onclick="switchTab('register')">Регистрация</button>
+            </div>
+
+            <!-- Форма входа -->
+            <div id="loginForm">
+                <h3 class="auth-title">С возвращением!</h3>
+                <p class="auth-subtitle">Войдите, чтобы продолжить помогать животным</p>
+
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Пароль</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
+                </div>
+
+                <button class="btn-submit" onclick="doLogin()">
+                    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Войти
+                </button>
+
+                <p class="auth-hint">
+                    Нет аккаунта?
+                    <a href="#" onclick="switchTab('register'); return false;">Зарегистрируйтесь</a>
+                </p>
+            </div>
+
+            <!-- Форма регистрации. Скрыта по умолчанию -->
+            <div id="registerForm" class="form-hidden">
+                <h3 class="auth-title">Создать аккаунт</h3>
+                <p class="auth-subtitle">Присоединяйтесь к нам — это займёт минуту</p>
+
+                <div class="form-group">
+                    <label class="form-label" for="regName">Имя</label>
+                    <input type="text" class="form-input" id="regName" placeholder="Как к вам обращаться">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Email</label>
+                    <input type="email" class="form-input" id="regEmail" placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPhone">Телефон</label>
+                    <input type="tel" class="form-input" id="regPhone" placeholder="+7 (___) ___-__-__">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Пароль</label>
+                    <input type="password" class="form-input" id="regPassword" placeholder="Минимум 6 символов">
+                </div>
+
+                <button class="btn-submit" onclick="doRegister()">
+                    <i class="fa-solid fa-user-plus" aria-hidden="true"></i> Зарегистрироваться
+                </button>
+
+                <p class="auth-hint">
+                    Уже есть аккаунт?
+                    <a href="#" onclick="switchTab('login'); return false;">Войдите</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="index.html" class="back-link">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> На главную
+            </a>
+        </div>
+    </div>
+
+    <script>
+        /* Базовый адрес API. При деплое заменить на публичный URL бэкенда */
+        const API_URL = 'http://localhost:3000';
+
+        /*
+         * Всплывающее уведомление в углу экрана.
+         * Перекрывает предыдущее, если оно ещё не исчезло.
+         * type: success / error / info — задаёт иконку и цвет.
+         */
+        function showToast(text, type = 'success') {
+            const old = document.querySelector('.toast-notification');
+            if (old) old.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
+            const colors = { success: '#466840', error: '#E85A5A', info: '#96B8E4' };
+            toast.style.backgroundColor = colors[type] || colors.success;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}" aria-hidden="true"></i><span>${text}</span>`;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 2800);
+        }
+
+        /*
+         * Переключает активную вкладку между "Вход" и "Регистрация".
+         * Снимает active со всех кнопок и блоков,
+         * затем ставит его на выбранные.
+         */
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.remove('form-hidden');
+                document.getElementById('registerForm').classList.add('form-hidden');
+            } else {
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.remove('form-hidden');
+                document.getElementById('loginForm').classList.add('form-hidden');
+            }
+        }
+
+        /*
+         * Вход в аккаунт.
+         * Проверяет email и длину пароля, отправляет POST на /api/auth/login.
+         * При успехе сохраняет токен и данные пользователя в localStorage,
+         * затем переходит в личный кабинет.
+         */
+        async function doLogin() {
+            const email    = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
+            if (!password || password.length < 6) { showToast('Пароль должен быть минимум 6 символов', 'error'); return; }
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.error || 'Ошибка входа', 'error');
+                    return;
+                }
+
+                localStorage.setItem('lapa_token', data.token);
+                localStorage.setItem('lapa_user', JSON.stringify(data.user));
+
+                showToast('Вы успешно вошли!', 'success');
+                setTimeout(() => window.location.href = 'account.html', 800);
+            } catch (err) {
+                showToast('Сервер не отвечает', 'error');
+            }
+        }
+
+        /*
+         * Регистрация нового пользователя.
+         * Проверяет обязательные поля, отправляет POST на /api/auth/register.
+         * При успехе сразу авторизует: сохраняет токен и данные пользователя,
+         * затем переходит в личный кабинет.
+         */
+        async function doRegister() {
+            const name     = document.getElementById('regName').value.trim();
+            const email    = document.getElementById('regEmail').value.trim();
+            const phone    = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+
+            if (!name) { showToast('Укажите имя', 'error'); return; }
+            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
+            if (!phone) { showToast('Укажите телефон', 'error'); return; }
+            if (!password || password.length < 6) { showToast('Пароль должен быть минимум 6 символов', 'error'); return; }
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.error || 'Ошибка регистрации', 'error');
+                    return;
+                }
+
+                localStorage.setItem('lapa_token', data.token);
+                localStorage.setItem('lapa_user', JSON.stringify(data.user));
+
+                showToast('Регистрация успешна!', 'success');
+                setTimeout(() => window.location.href = 'account.html', 800);
+            } catch (err) {
+                showToast('Сервер не отвечает', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
