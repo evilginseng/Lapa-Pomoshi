@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет — Лапа Помощи</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /*
+         * Карточка профиля в верхней части страницы.
+         * Содержит аватар, имя, контакты и два счётчика — избранное и заявки.
+         */
+        .profile-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 48px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Верхняя декоративная полоса с градиентом из четырёх цветов сайта */
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--color-blue) 0%,
+                var(--color-green) 33%,
+                var(--color-sand) 66%,
+                var(--color-dark-green) 100%);
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--color-sand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--color-dark-green);
+            flex-shrink: 0;
+            border: 4px solid var(--color-white);
+            box-shadow: var(--shadow-md);
+        }
+        .profile-info h3 { font-size: 26px; margin-bottom: 6px; }
+        .profile-info p  { font-size: 14px; color: var(--color-muted); margin-bottom: 4px; }
+
+        /* Блок с двумя счётчиками справа от имени. margin-left: auto прижимает к правому краю */
+        .profile-stats { display: flex; gap: 32px; margin-left: auto; }
+        .profile-stat .num {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-dark-green);
+            line-height: 1;
+        }
+        .profile-stat .lbl {
+            font-size: 11px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 6px;
+        }
+
+        /* ---------- Переключатель вкладок ---------- */
+        .tabs-custom {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: 1.5px solid var(--color-border);
+            background: var(--color-white);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .tab-btn:hover { border-color: var(--color-blue); color: var(--color-blue-dark); }
+        .tab-btn.active {
+            background: var(--color-blue);
+            border-color: var(--color-blue);
+            color: var(--color-white);
+        }
+
+        /* По умолчанию вкладки скрыты. Класс active показывает нужную */
+        .tab-content-custom { display: none; }
+        .tab-content-custom.active { display: block; }
+
+        /* ---------- Карточка заявки ---------- */
+        .application-card {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            text-align: left;
+            border: 1px solid var(--color-border-light);
+        }
+        .application-info { flex-grow: 1; }
+        .application-info h4 { font-size: 18px; margin-bottom: 4px; }
+        .application-info p  { font-size: 13px; color: var(--color-muted); margin: 0; }
+
+        /* Цвет статуса заявки — новый / в рассмотрении / одобрен / отклонён */
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .status-new       { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+        .status-pending   { background: rgba(240, 180, 60, 0.18); color: #b07a00; }
+        .status-approved  { background: var(--color-green-light); color: var(--color-dark-green); }
+        .status-rejected  { background: rgba(232, 90, 90, 0.15);  color: var(--color-red); }
+
+        /* ---------- Заглушка для пустого состояния ---------- */
+        .empty-state { padding: 80px 20px; text-align: center; }
+        .empty-state-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--color-bg-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+            color: var(--color-muted);
+        }
+        .empty-state h3 { font-size: 26px; margin-bottom: 12px; }
+        .empty-state p {
+            font-size: 15px;
+            color: var(--color-muted);
+            max-width: 400px;
+            margin: 0 auto 28px;
+        }
+
+        /*
+         * Адаптив.
+         * Планшет (до 991px) — карточка профиля становится вертикальной, счётчики по центру.
+         * Телефон (до 767px) — карточка заявки тоже становится вертикальной.
+         */
+        @media (max-width: 991px) {
+            .profile-card { flex-direction: column; text-align: center; }
+            .profile-stats { margin-left: 0; }
+        }
+        @media (max-width: 767px) {
+            .profile-card { padding: 24px; }
+            .profile-stats { gap: 20px; }
+            .application-card { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body style="display: none;">
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+            <div class="ms-auto d-flex gap-2">
+                <a class="btn-login" href="index.html">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> На главную
+                </a>
+                <button class="btn-login" style="background: var(--color-red);" onclick="userLogout()">
+                    <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Выйти
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-header-gradient" style="padding: 60px 0 40px;">
+        <div class="container">
+            <span class="eyebrow">Личный кабинет</span>
+            <h1 class="page-title">Мой профиль</h1>
+            <p class="page-subtitle">Здесь собраны ваши избранные животные и заявки на усыновление</p>
+        </div>
+    </section>
+
+    <section class="container" style="padding-bottom: 60px;">
+        <div class="profile-card">
+            <div class="profile-avatar"><i class="fa-solid fa-user" aria-hidden="true"></i></div>
+            <div class="profile-info">
+                <h3 id="profileName">Гость</h3>
+                <p id="profileEmail"><i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>guest@lapapomoshi.ru</p>
+                <p id="profilePhone"><i class="fa-solid fa-phone me-2" aria-hidden="true"></i>+7 (999) 000-00-00</p>
+            </div>
+            <div class="profile-stats">
+                <div class="profile-stat"><div class="num" id="favCount">0</div><div class="lbl">В избранном</div></div>
+                <div class="profile-stat"><div class="num" id="appCount">0</div><div class="lbl">Заявок</div></div>
+            </div>
+        </div>
+
+        <div class="tabs-custom">
+            <button class="tab-btn active" onclick="switchTab('favorites', this)">
+                <i class="fa-solid fa-heart me-2" aria-hidden="true"></i>Избранное
+            </button>
+            <button class="tab-btn" onclick="switchTab('applications', this)">
+                <i class="fa-solid fa-file-lines me-2" aria-hidden="true"></i>Мои заявки
+            </button>
+        </div>
+
+        <div class="tab-content-custom active" id="tab-favorites">
+            <div class="row g-4" id="favoritesGrid"></div>
+            <div id="favoritesEmpty" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"><i class="fa-regular fa-heart" aria-hidden="true"></i></div>
+                <h3>В избранном пока пусто</h3>
+                <p>Добавляйте понравившихся животных с помощью иконки сердца на карточке</p>
+                <a href="catalog.html" class="btn-primary-custom">
+                    <i class="fa-solid fa-paw" aria-hidden="true"></i> Перейти в каталог
+                </a>
+            </div>
+        </div>
+
+        <div class="tab-content-custom" id="tab-applications">
+            <div id="applicationsList"></div>
+            <div id="applicationsEmpty" class="empty-state">
+                <div class="empty-state-icon"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></div>
+                <h3>Заявок пока нет</h3>
+                <p>Когда вы подадите заявку на усыновление, она появится здесь</p>
+                <a href="catalog.html" class="btn-primary-custom">
+                    <i class="fa-solid fa-paw" aria-hidden="true"></i> Найти питомца
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="copyright-custom" style="margin-top: 0; border: none; padding-top: 0;">
+                &copy; 2026 Приют «Лапа Помощи». Все права защищены.
+                <a href="admin.html" class="admin-link">
+                    <i class="fa-solid fa-lock" style="font-size: 10px;" aria-hidden="true"></i> Вход для сотрудников
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* Базовый адрес API. При деплое заменить на публичный URL бэкенда */
+        const API_URL = 'http://localhost:3000';
+
+        /*
+         * Возвращает массив id избранных животных из localStorage.
+         * Если данных нет или JSON повреждён — возвращает пустой массив,
+         * чтобы дальнейший код не падал на парсинге.
+         */
+        function getFavorites() {
+            try {
+                return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        /* Сохраняет массив избранного в localStorage */
+        function saveFavorites(favs) {
+            localStorage.setItem('lapa_favorites', JSON.stringify(favs));
+        }
+
+        /*
+         * Проверяет, авторизован ли пользователь.
+         * Признак авторизации — наличие токена в localStorage,
+         * который сохраняется после успешного входа через login.html.
+         */
+        function isUserAuthorized() {
+            return localStorage.getItem('lapa_token') !== null;
+        }
+
+        /*
+         * Возвращает объект пользователя из localStorage.
+         * Ожидаемые поля: id, full_name, email, phone, role.
+         */
+        function getUser() {
+            try {
+                return JSON.parse(localStorage.getItem('lapa_user') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        /* Очищает токен и данные пользователя, перенаправляет на главную */
+        function userLogout() {
+            localStorage.removeItem('lapa_token');
+            localStorage.removeItem('lapa_user');
+            localStorage.removeItem('lapa_authorized');
+            window.location.href = 'index.html';
+        }
+
+        /* Склонение слова "год" в зависимости от возраста */
+        function getAgeWord(age) {
+            if (age === 1) return 'год';
+            if (age >= 2 && age <= 4) return 'года';
+            return 'лет';
+        }
+
+        /*
+         * Возвращает текстовое представление возраста.
+         * До года — в месяцах, дальше — в годах с правильным склонением.
+         */
+        function getAgeText(age) {
+            if (age < 1) return `${Math.round(age * 12)} мес.`;
+            return `${age} ${getAgeWord(age)}`;
+        }
+
+        /*
+         * Переключает активную вкладку в личном кабинете.
+         * Снимает класс active со всех кнопок и блоков,
+         * затем ставит его на выбранные.
+         */
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content-custom').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        /* Удаляет животное из избранного и перерисовывает список */
+        function removeFavorite(id) {
+            let favs = getFavorites();
+            favs = favs.filter(f => f !== id);
+            saveFavorites(favs);
+            renderFavorites();
+            updateStats();
+        }
+
+        /*
+         * Загружает список животных из API, оставляет только те,
+         * что есть в избранном, и рисует карточки.
+         * Если избранное пустое — показывает заглушку.
+         */
+        async function renderFavorites() {
+            const favs = getFavorites();
+            const grid = document.getElementById('favoritesGrid');
+            const empty = document.getElementById('favoritesEmpty');
+
+            if (favs.length === 0) {
+                grid.innerHTML = '';
+                grid.style.display = 'none';
+                empty.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'flex';
+            empty.style.display = 'none';
+            grid.innerHTML = '';
+
+            try {
+                const res = await fetch(`${API_URL}/api/animals`);
+                const allPets = await res.json();
+                const favPets = allPets.filter(p => favs.includes(p.id));
+
+                const tagColors = ['blue', 'green', 'sand'];
+
+                favPets.forEach((pet, idx) => {
+                    const tags = pet.tags || [];
+                    const tagsHtml = tags
+                        .map((t, i) => `<span class="pet-tag ${tagColors[(idx + i) % 3]}">${t}</span>`)
+                        .join('');
+
+                    grid.innerHTML += `
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="pet-card-custom">
+                                <div class="pet-image-wrapper">
+                                    <button class="pet-fav-btn active" onclick="removeFavorite(${pet.id})" title="Удалить из избранного">
+                                        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <img src="${pet.img}" alt="${pet.name}">
+                                </div>
+                                <div class="pet-info-custom">
+                                    <div class="pet-meta">
+                                        <span>${pet.species}</span>
+                                        <span class="dot"></span>
+                                        <span>${getAgeText(pet.age)}</span>
+                                    </div>
+                                    <h3>${pet.name}</h3>
+                                    <div class="pet-tags">${tagsHtml}</div>
+                                    <a href="animal.html?id=${pet.id}" class="btn-pet">
+                                        Подробнее <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = '<p style="text-align:center; color: var(--color-muted);">Ошибка загрузки</p>';
+            }
+        }
+
+        /*
+         * Загружает заявки текущего пользователя из API
+         * по его id и рисует их списком.
+         * Если заявок нет — показывает заглушку.
+         */
+        async function renderApplications() {
+            const user = getUser();
+            const list = document.getElementById('applicationsList');
+            const empty = document.getElementById('applicationsEmpty');
+
+            if (!user.id) {
+                list.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/api/applications/user/${user.id}`);
+                const apps = await res.json();
+
+                if (apps.length === 0) {
+                    list.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+                list.innerHTML = '';
+
+                apps.forEach(app => {
+                    // Приводим статус к нижнему регистру и убираем пробелы,
+                    // чтобы 'Pending', ' pending ', 'PENDING' и т.п. обрабатывались одинаково
+                    const rawStatus = (app.status || '').toString().trim().toLowerCase();
+
+                    let statusClass = 'status-new';
+                    let statusText  = 'Новая';
+
+                    if (rawStatus === 'approved' || rawStatus === 'одобрена' || rawStatus === 'одобрено') {
+                        statusClass = 'status-approved';
+                        statusText  = 'Одобрена';
+                    } else if (rawStatus === 'rejected' || rawStatus === 'отклонена' || rawStatus === 'отклонено') {
+                        statusClass = 'status-rejected';
+                        statusText  = 'Отклонена';
+                    } else if (
+                        rawStatus === 'pending' ||
+                        rawStatus === 'in_review' ||
+                        rawStatus === 'in-review' ||
+                        rawStatus === 'processing' ||
+                        rawStatus === 'consideration' ||
+                        rawStatus === 'review' ||
+                        rawStatus === 'на рассмотрении' ||
+                        rawStatus === 'в рассмотрении'
+                    ) {
+                        statusClass = 'status-pending';
+                        statusText  = 'На рассмотрении';
+                    } else if (rawStatus === 'new' || rawStatus === 'новая' || rawStatus === '') {
+                        statusClass = 'status-new';
+                        statusText  = 'Новая';
+                    } else {
+                        // Неизвестный статус — показываем как есть, чтобы было видно,
+                        // какое именно значение приходит из БД
+                        statusClass = 'status-new';
+                        statusText  = app.status || 'Новая';
+                    }
+
+                    list.innerHTML += `
+                        <div class="application-card">
+                            <div class="application-info">
+                                <h4>${app.pet_name || 'Питомец'}</h4>
+                                <p>Заявка от ${new Date(app.created_at).toLocaleDateString('ru-RU')}</p>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = '<p style="text-align:center; color: var(--color-muted);">Ошибка загрузки</p>';
+            }
+        }
+
+        /*
+         * Обновляет два счётчика в карточке профиля:
+         * количество избранного (из localStorage) и количество заявок (из API).
+         */
+        async function updateStats() {
+            document.getElementById('favCount').textContent = getFavorites().length;
+
+            const user = getUser();
+            if (!user.id) {
+                document.getElementById('appCount').textContent = '0';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/api/applications/user/${user.id}`);
+                const apps = await res.json();
+                document.getElementById('appCount').textContent = apps.length;
+            } catch (err) {
+                document.getElementById('appCount').textContent = '0';
+            }
+        }
+
+        /*
+         * Инициализация страницы.
+         * 1. Проверяет авторизацию — неавторизованных перенаправляет на login.html.
+         * 2. Заполняет имя, email, телефон из localStorage.
+         * 3. Загружает избранное, заявки и счётчики.
+         * 4. Показывает страницу (body изначально скрыт через style="display: none").
+         */
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!isUserAuthorized()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = getUser();
+            if (user.full_name) document.getElementById('profileName').textContent = user.full_name;
+            if (user.email) document.getElementById('profileEmail').innerHTML = `<i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>${user.email}`;
+            if (user.phone) document.getElementById('profilePhone').innerHTML = `<i class="fa-solid fa-phone me-2" aria-hidden="true"></i>${user.phone}`;
+
+            await renderFavorites();
+            await renderApplications();
+            await updateStats();
+
+            document.body.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
