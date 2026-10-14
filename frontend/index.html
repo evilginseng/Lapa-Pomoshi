@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лапа Помощи — Приют для животных</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .hero-section { padding: 40px 0 40px; }
+        .hero-banner {
+            background: linear-gradient(135deg, #F7F4F0 0%, #E8EFF8 50%, #F7E7CD 100%);
+            border-radius: var(--radius-xl);
+            padding: 64px 48px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -150px; right: -150px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(150, 184, 228, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -200px; left: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(158, 205, 65, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-banner .row { position: relative; z-index: 1; }
+
+        .hero-title {
+            font-size: 58px;
+            line-height: 1.08;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+            font-weight: 600;
+            text-align: left;
+        }
+        .hero-title em { font-style: italic; color: var(--color-blue-dark); font-weight: 500; }
+        .hero-subtitle {
+            font-size: 17px;
+            color: var(--color-text-light);
+            margin-bottom: 32px;
+            max-width: 520px;
+            line-height: 1.7;
+            text-align: left;
+        }
+        .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            padding-top: 28px;
+            border-top: 1px solid var(--color-border);
+        }
+        .hero-stat { text-align: left; }
+        .hero-stat .num {
+            font-family: var(--font-heading);
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .hero-stat:nth-child(1) .num { color: var(--color-blue-dark); }
+        .hero-stat:nth-child(2) .num { color: var(--color-green-dark); }
+        .hero-stat:nth-child(3) .num { color: var(--color-sand-dark); }
+        .hero-stat .lbl {
+            font-size: 12px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+        }
+
+        .hero-img-main {
+            position: relative;
+            height: 100%;
+            min-height: 480px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            z-index: 1;
+        }
+        .hero-img-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero-img-main::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 100%);
+        }
+
+        .hero-img-small {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 4px solid var(--color-white);
+            z-index: 2;
+        }
+        .hero-img-small img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-img-small.top-left { top: -20px; left: -20px; }
+        .hero-img-small.bottom-right { bottom: -20px; right: -20px; }
+
+        .hero-badge {
+            position: absolute;
+            bottom: 24px; left: 24px; right: 24px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-md);
+            z-index: 2;
+            text-align: left;
+        }
+        .hero-badge-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background-color: var(--color-sand);
+            color: var(--color-dark-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .hero-badge-text h4 {
+            font-size: 16px;
+            margin-bottom: 2px;
+            font-family: var(--font-body);
+            font-weight: 600;
+        }
+        .hero-badge-text p { font-size: 13px; color: var(--color-muted); margin: 0; }
+
+        .catalog-section { padding: 40px 0 100px; }
+
+        .steps-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-sand-light) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .steps-header { margin-bottom: 64px; }
+        .steps-title { font-size: 42px; margin-bottom: 16px; line-height: 1.15; }
+        .steps-subtitle {
+            font-size: 16px;
+            color: var(--color-text-light);
+            max-width: 560px;
+            margin: 0 auto;
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .step-card {
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 48px 28px 40px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        .step-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 0;
+        }
+        .step-card:nth-child(1)::before { background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-blue-dark) 100%); }
+        .step-card:nth-child(2)::before { background: linear-gradient(135deg, var(--color-green) 0%, var(--color-green-dark) 100%); }
+        .step-card:nth-child(3)::before { background: linear-gradient(135deg, var(--color-sand) 0%, var(--color-sand-dark) 100%); }
+        .step-card:nth-child(4)::before { background: linear-gradient(135deg, var(--color-dark-green) 0%, #3a5735 100%); }
+        .step-card > * { position: relative; z-index: 1; transition: var(--transition); }
+        .step-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); }
+        .step-card:hover::before { opacity: 1; }
+        .step-card:hover .step-number,
+        .step-card:hover h3,
+        .step-card:hover p { color: var(--color-white); }
+
+        .step-number {
+            font-family: var(--font-heading);
+            font-size: 96px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 24px;
+            letter-spacing: -0.04em;
+        }
+        .step-card:nth-child(1) .step-number { color: var(--color-blue); }
+        .step-card:nth-child(2) .step-number { color: var(--color-green); }
+        .step-card:nth-child(3) .step-number { color: var(--color-sand); }
+        .step-card:nth-child(4) .step-number { color: var(--color-dark-green); }
+        .step-card h3 { font-size: 22px; margin-bottom: 12px; font-family: var(--font-heading); }
+        .step-card p { font-size: 14px; color: var(--color-text-light); line-height: 1.6; margin: 0; }
+
+        .bento-section { padding: 100px 0; background-color: var(--color-bg); }
+        .bento-header { margin-bottom: 56px; text-align: center; }
+        .bento-title { font-size: 42px; margin-bottom: 12px; line-height: 1.15; }
+        .bento-subtitle {
+            font-size: 16px;
+            color: var(--color-text-light);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr 1fr 1.3fr;
+            grid-template-rows: 240px 240px;
+            gap: 20px;
+        }
+        .bento-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            background-size: cover;
+            background-position: center;
+            background-color: var(--color-dark-green);
+            display: flex;
+            align-items: flex-end;
+            padding: 24px;
+            color: var(--color-white);
+            text-align: left;
+            cursor: pointer;
+        }
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 60%, transparent 100%);
+            z-index: 1;
+            transition: var(--transition);
+        }
+        .bento-item:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+        .bento-item:hover::before { background: linear-gradient(to top, rgba(70, 104, 64, 0.75) 0%, rgba(70, 104, 64, 0.15) 60%, transparent 100%); }
+
+        .bento-content { position: relative; z-index: 2; }
+        .bento-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 5px 12px;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--color-dark-green);
+        }
+        .bento-tag.blue { background-color: var(--color-blue); color: var(--color-white); }
+        .bento-tag.green { background-color: var(--color-green); color: var(--color-dark-green); }
+        .bento-tag.sand { background-color: var(--color-sand); color: var(--color-dark-green); }
+        .bento-content h3 { font-size: 22px; color: var(--color-white); margin-bottom: 6px; font-family: var(--font-heading); }
+        .bento-content p { font-size: 13px; color: rgba(255, 255, 255, 0.85); margin: 0; line-height: 1.5; }
+
+        .bento-item.large-left    { grid-column: 1 / 2; grid-row: 1 / 3; }
+        .bento-item.small-top     { grid-column: 2 / 3; grid-row: 1 / 2; }
+        .bento-item.small-bottom  { grid-column: 2 / 3; grid-row: 2 / 3; }
+        .bento-item.large-right   { grid-column: 4 / 5; grid-row: 1 / 3; }
+        .bento-item.empty-box     { grid-column: 3 / 4; grid-row: 1 / 2; }
+        .bento-item.empty-box::before { background: linear-gradient(to top, rgba(70, 104, 64, 0.85) 0%, rgba(70, 104, 64, 0.4) 60%, rgba(70, 104, 64, 0.2) 100%); }
+        .bento-item.empty-box:hover::before { background: linear-gradient(to top, rgba(150, 184, 228, 0.85) 0%, rgba(150, 184, 228, 0.4) 60%, rgba(150, 184, 228, 0.2) 100%); }
+
+        .bento-item.accent-green {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+            background-color: var(--color-green);
+            background-image: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .bento-item.accent-green::before { display: none; }
+        .bento-item.accent-green:hover { background-color: var(--color-green-dark); }
+        .accent-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            z-index: 2;
+            width: 100%;
+        }
+        .accent-inner i.fa-paw {
+            font-size: 32px;
+            color: var(--color-dark-green);
+            background-color: rgba(255,255,255,0.4);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .bento-item.accent-green:hover .accent-inner i.fa-paw {
+            background-color: var(--color-white);
+            transform: scale(1.1) rotate(-10deg);
+        }
+        .accent-inner h3 { font-size: 17px; color: var(--color-dark-green); margin: 0; line-height: 1.3; }
+        .accent-arrow {
+            color: var(--color-dark-green);
+            font-size: 14px;
+            margin-top: 4px;
+            transition: var(--transition);
+        }
+        .bento-item.accent-green:hover .accent-arrow { transform: translateX(6px); }
+
+        .donation-section-custom {
+            background: linear-gradient(135deg, var(--color-dark-green) 0%, #3a5735 100%);
+            border-radius: var(--radius-xl);
+            padding: 80px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto 100px;
+            max-width: 1200px;
+        }
+        .donation-section-custom::before {
+            content: '';
+            position: absolute;
+            top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(150, 184, 228, 0.35) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .donation-section-custom::after {
+            content: '';
+            position: absolute;
+            bottom: -100px; left: -100px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(233, 196, 142, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .donation-section-custom > * { position: relative; z-index: 2; }
+        .donation-section-custom .eyebrow { color: var(--color-sand); }
+        .donation-section-custom h2 { font-size: 44px; color: var(--color-white); margin-bottom: 20px; line-height: 1.15; }
+        .donation-section-custom p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            max-width: 540px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+        .btn-donate-custom {
+            background-color: var(--color-sand);
+            color: var(--color-dark-green);
+            padding: 18px 52px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .btn-donate-custom:hover {
+            background-color: var(--color-green);
+            transform: translateY(-4px);
+            color: var(--color-dark-green);
+            box-shadow: var(--shadow-green);
+        }
+
+        .modal-checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .modal-checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--color-blue);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .modal-checkbox-group label {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        @media (max-width: 1199px) {
+            .hero-title { font-size: 48px; }
+        }
+        @media (max-width: 991px) {
+            .hero-title { font-size: 38px; text-align: center; }
+            .hero-subtitle { text-align: center; margin-left: auto; margin-right: auto; }
+            .hero-actions { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .hero-stat { text-align: center; }
+            .hero-banner { padding: 48px 32px; }
+            .hero-img-main { min-height: 400px; margin-top: 40px; }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+            .step-number { font-size: 72px; }
+            .bento-title { font-size: 32px; }
+            .bento-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+            .bento-item.large-left { grid-column: 1 / 3; grid-row: 1 / 2; height: 300px; }
+            .bento-item.small-top { grid-column: 1 / 2; grid-row: 2 / 3; height: 200px; }
+            .bento-item.small-bottom { grid-column: 1 / 2; grid-row: 3 / 4; height: 200px; }
+            .bento-item.empty-box { grid-column: 2 / 3; grid-row: 2 / 3; height: 200px; }
+            .bento-item.accent-green { grid-column: 2 / 3; grid-row: 3 / 4; height: 200px; }
+            .bento-item.large-right { grid-column: 1 / 3; grid-row: 4 / 5; height: 200px; }
+            .donation-section-custom h2 { font-size: 32px; }
+        }
+        @media (max-width: 767px) {
+            .hero-title { font-size: 30px; }
+            .hero-subtitle { font-size: 15px; }
+            .hero-banner { padding: 32px 24px; }
+            .hero-stats { gap: 24px; }
+            .hero-stat .num { font-size: 26px; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .steps-title { font-size: 28px; }
+            .step-number { font-size: 72px; }
+            .bento-title { font-size: 26px; }
+            .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .bento-item.large-left,
+            .bento-item.small-top,
+            .bento-item.small-bottom,
+            .bento-item.empty-box,
+            .bento-item.accent-green,
+            .bento-item.large-right { grid-column: 1 / 2; grid-row: auto; height: 220px; }
+            .donation-section-custom { padding: 56px 24px; margin: 0 auto 60px; }
+            .donation-section-custom h2 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Открыть меню">
+                <i class="fa-solid fa-bars" style="color: var(--color-dark-green); font-size: 20px;" aria-hidden="true"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link-custom active" href="index.html">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="catalog.html">Каталог</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="#steps">Как забрать</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html">О приюте</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="contacts.html">Контакты</a></li>
+                </ul>
+            </div>
+            <a class="btn-login d-none d-lg-inline-flex" href="account.html">
+                <i class="fa-regular fa-user" aria-hidden="true"></i> Кабинет
+                <span class="fav-counter" id="favCounter">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-banner">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <span class="eyebrow">Приют для животных с 2021 года</span>
+                        <h1 class="hero-title">Найдите <em>верного друга</em>, который ждет вас</h1>
+                        <p class="hero-subtitle">Более 200 собак и кошек ищут любящую семью. Подарите им дом, и они подарят вам свою преданность.</p>
+                        <div class="hero-actions">
+                            <a href="#catalog" class="btn-primary-custom"><i class="fa-solid fa-paw" aria-hidden="true"></i> Смотреть животных</a>
+                            <a href="#steps" class="btn-outline-custom">Как забрать питомца</a>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="hero-stat"><div class="num">124</div><div class="lbl">Нашли дом</div></div>
+                            <div class="hero-stat"><div class="num">200+</div><div class="lbl">Питомцев</div></div>
+                            <div class="hero-stat"><div class="num">5</div><div class="lbl">Лет работы</div></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-img-main">
+                            <!-- Вставь сюда своё большое фото: <img src="img/hero-main.jpg" alt="..."> -->
+                            <img src="https://avatars.mds.yandex.net/i?id=9d06603fb91ce31639ed1af804f500cc_l-7673608-images-thumbs&n=13" alt="Питомец">
+                            <div class="hero-img-small top-left">
+                                
+                            </div>
+                            <div class="hero-img-small bottom-right">
+                                
+                            </div>
+                            <div class="hero-badge">
+                                <div class="hero-badge-icon"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i></div>
+                                <div class="hero-badge-text">
+                                    <h4>Все животные здоровы</h4>
+                                    <p>Вакцинация и осмотр ветеринара</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="catalog-section" id="catalog">
+        <div class="container">
+            <div class="filters-wrapper">
+                <h2 class="section-title" style="font-size: 26px;">Найдите своего питомца</h2>
+                <p class="section-subtitle" style="font-size: 14px; margin-bottom: 32px;">Используйте фильтры, чтобы подобрать животное по параметрам</p>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fa-solid fa-dog me-1" aria-hidden="true"></i> Вид</label>
+                            <select class="filter-select" id="filterSpecies">
+                                <option value="all">Все животные</option>
+                                <option value="Собака">Собаки</option>
+                                <option value="Кошка">Кошки</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fa-solid fa-calendar me-1" aria-hidden="true"></i> Возраст</label>
+                            <select class="filter-select" id="filterAge">
+                                <option value="all">Любой возраст</option>
+                                <option value="0-1">До 1 года</option>
+                                <option value="1-3">1-3 года</option>
+                                <option value="3-7">3-7 лет</option>
+                                <option value="7+">Старше 7 лет</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fa-solid fa-venus-mars me-1" aria-hidden="true"></i> Пол</label>
+                            <select class="filter-select" id="filterGender">
+                                <option value="all">Любой</option>
+                                <option value="Мальчик">Мальчик</option>
+                                <option value="Девочка">Девочка</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fa-solid fa-ruler me-1" aria-hidden="true"></i> Размер</label>
+                            <select class="filter-select" id="filterSize">
+                                <option value="all">Любой размер</option>
+                                <option value="Маленький">Маленький</option>
+                                <option value="Средний">Средний</option>
+                                <option value="Большой">Большой</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-blue-custom" onclick="applyFilters()"><i class="fa-solid fa-filter" aria-hidden="true"></i> Применить</button>
+                    <button class="btn-outline-custom" onclick="resetFilters()" style="padding: 14px 32px; font-size: 15px;"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Сбросить</button>
+                    <span class="filter-result" id="filterResult"></span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 48px;">
+                <span class="eyebrow green">Наши подопечные</span>
+                <h2 class="section-title">Они ждут встречи с вами</h2>
+                <p class="section-subtitle">Каждое животное прошло осмотр, вакцинацию и готово к переезду в новый дом</p>
+            </div>
+
+            <div class="row g-4 justify-content-center" id="petsGrid"></div>
+            <div class="pagination-custom" id="pagination"></div>
+        </div>
+    </section>
+
+    <section class="steps-section" id="steps">
+        <div class="container">
+            <div class="steps-header">
+                <span class="eyebrow sand">Простой путь к другу</span>
+                <h2 class="steps-title">Как забрать питомца из приюта</h2>
+                <p class="steps-subtitle">Всего четыре шага отделяют вас от встречи с новым членом семьи</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card"><div class="step-number">01</div><h3>Выберите питомца</h3><p>Просмотрите каталог и найдите того, кто вам понравился.</p></div>
+                <div class="step-card"><div class="step-number">02</div><h3>Оставьте заявку</h3><p>Нажмите «Хочу забрать» на карточке и заполните форму.</p></div>
+                <div class="step-card"><div class="step-number">03</div><h3>Познакомьтесь</h3><p>Мы свяжемся с вами и организуем встречу в приюте.</p></div>
+                <div class="step-card"><div class="step-number">04</div><h3>Заберите домой</h3><p>Подпишите договор и отвезите нового друга домой.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bento-section">
+        <div class="container">
+            <div class="bento-header">
+                <span class="eyebrow">Жизнь приюта</span>
+                <h2 class="bento-title">Истории, новости и события</h2>
+                <p class="bento-subtitle">Узнайте, чем живёт наш приют, и присоединяйтесь к добрым делам</p>
+            </div>
+            <div class="bento-grid">
+                <!-- История Локи — вставь своё фото в background-image -->
+                <a href="catalog.html" class="bento-item large-left" style="background-image: url('https://i.pinimg.com/1200x/5e/7c/55/5e7c551fb5d32a9105c12ba0ff70dfc0.jpg');">
+                    <div class="bento-content"><span class="bento-tag blue">История успеха</span><h3>Как Локи нашёл семью</h3><p>Пёс из приюта стал лучшим другом для семьи</p></div>
+                </a>
+                <!-- Новые поступления -->
+                <a href="catalog.html" class="bento-item small-top" style="background-image: url('https://assets.newsweek.com/wp-content/uploads/2025/08/2620309-dog-cat.jpg?w=1600&quality=80&webp=1');">
+                    <div class="bento-content"><span class="bento-tag green">Новости</span><h3>Новые поступления</h3></div>
+                </a>
+                <!-- День открытых дверей -->
+                <a href="contacts.html" class="bento-item small-bottom" style="background-image: url('https://i.pinimg.com/1200x/60/17/ea/6017ea6392bc716855c5690438140e91.jpg');">
+                    <div class="bento-content"><span class="bento-tag sand">События</span><h3>День открытых дверей</h3></div>
+                </a>
+                <!-- Что-то интересное -->
+                <a href="about.html" class="bento-item empty-box" style="background-image: url('https://i.pinimg.com/736x/dc/6b/d1/dc6bd15f823c066b82a01973945b101e.jpg');">
+                    <div class="bento-content" style="text-align: center; width: 100%;"><span class="bento-tag">Скоро</span><h3 style="font-size: 18px;">Что-то интересное</h3><p>Следите за новостями</p></div>
+                </a>
+                <!-- Зелёная карточка-кнопка (без фото) -->
+                <a href="catalog.html" class="bento-item accent-green">
+                    <div class="accent-inner"><i class="fa-solid fa-paw" aria-hidden="true"></i><h3>Смотреть всех животных</h3><span class="accent-arrow"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+                </a>
+                <!-- Присоединяйтесь к команде -->
+                <a href="donate.html" class="bento-item large-right" style="background-image: url('https://static.tildacdn.com/tild6663-6230-4439-b139-353861376235/DSC_2195.jpg');">
+                    <div class="bento-content"><span class="bento-tag">Волонтёрство</span><h3>Присоединяйтесь к команде</h3><p>Помогите нам заботиться о животных</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="donation-section-custom">
+        <span class="eyebrow">Поддержите приют</span>
+        <h2>Ваша помощь меняет жизни</h2>
+        <p>Каждое пожертвование помогает нам кормить, лечить и находить дом для животных.</p>
+        <a href="donate.html" class="btn-donate-custom"><i class="fa-solid fa-heart" aria-hidden="true"></i> Поддержать приют</a>
+    </section>
+
+    <footer class="footer-custom" id="contacts">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                        <div class="footer-brand-text">Лапа Помощи<small>Приют для животных</small></div>
+                    </div>
+                    <p class="footer-desc">Мы — приют для животных, который помогает найти дом тем, кто в нем нуждается.</p>
+                    <div class="social-links-custom">
+                        <a href="#" class="social-circle-custom" aria-label="ВКонтакте"><i class="fa-brands fa-vk" aria-hidden="true"></i></a>
+                        <a href="#" class="social-circle-custom" aria-label="Telegram"><i class="fa-brands fa-telegram" aria-hidden="true"></i></a>
+                        <a href="#" class="social-circle-custom" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+                        <a href="#" class="social-circle-custom" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <h4>Навигация</h4>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="#steps">Как забрать</a>
+                    <a href="about.html">О приюте</a>
+                    <a href="contacts.html">Контакты</a>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <h4>Помощь</h4>
+                    <a href="donate.html">Пожертвования</a>
+                    <a href="donate.html">Волонтерство</a>
+                    <a href="donate.html">Фонды</a>
+                    <a href="donate.html">Партнеры</a>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h4>Контакты</h4>
+                    <p><i class="fa-solid fa-location-dot me-2" style="color: var(--color-blue);" aria-hidden="true"></i>г. Сыктывкар, ул. Коммунистическая, д. 25</p>
+                    <p><i class="fa-solid fa-phone me-2" style="color: var(--color-green);" aria-hidden="true"></i>+7 (8212) 123-45-67</p>
+                    <p><i class="fa-solid fa-envelope me-2" style="color: var(--color-sand-dark);" aria-hidden="true"></i>help@lapapomoshi.ru</p>
+                </div>
+            </div>
+            <div class="copyright-custom">
+                &copy; 2026 Приют «Лапа Помощи». Все права защищены.
+                <a href="admin.html" class="admin-link"><i class="fa-solid fa-lock" style="font-size: 10px;" aria-hidden="true"></i> Вход для сотрудников</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="adoptModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('adoptModal')" aria-label="Закрыть"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            <h3 class="modal-title">Заявка на усыновление</h3>
+            <p class="modal-subtitle">Питомец: <strong id="adoptPetName"></strong></p>
+            <div class="modal-input-group"><label class="modal-label">Ваше имя *</label><input type="text" class="modal-input" id="adoptName" placeholder="Иван Иванов"></div>
+            <div class="modal-input-group"><label class="modal-label">Email *</label><input type="email" class="modal-input" id="adoptEmail" placeholder="example@mail.ru"></div>
+            <div class="modal-input-group"><label class="modal-label">Телефон *</label><input type="tel" class="modal-input" id="adoptPhone" placeholder="+7 (___) ___-__-__"></div>
+            <div class="modal-input-group">
+                <label class="modal-label">Тип жилья</label>
+                <select class="modal-select" id="adoptHousing">
+                    <option value="">Выберите</option>
+                    <option value="Квартира">Квартира</option>
+                    <option value="Дом">Частный дом</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
+
+            <div class="modal-checkbox-group">
+                <input type="checkbox" id="adoptHasPets">
+                <label for="adoptHasPets">Есть другие питомцы</label>
+            </div>
+            <div class="modal-checkbox-group">
+                <input type="checkbox" id="adoptHasChildren">
+                <label for="adoptHasChildren">Есть дети</label>
+            </div>
+
+            <div class="modal-input-group"><label class="modal-label">Почему вы хотите забрать питомца?</label><textarea class="modal-textarea" id="adoptMessage" placeholder="Расскажите немного о себе"></textarea></div>
+            <button class="modal-submit blue" onclick="submitAdoption()"><i class="fa-solid fa-paw" aria-hidden="true"></i> Отправить заявку</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        function getFavorites() {
+            try {
+                return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveFavorites(favs) {
+            try {
+                localStorage.setItem('lapa_favorites', JSON.stringify(favs));
+            } catch (e) {}
+            updateFavCounter();
+        }
+
+        function toggleFavorite(id) {
+            let favs = getFavorites();
+            const index = favs.indexOf(id);
+
+            if (index > -1) {
+                favs.splice(index, 1);
+                showToast('Удалено из избранного', 'info');
+            } else {
+                favs.push(id);
+                showToast('Добавлено в избранное', 'success');
+            }
+
+            saveFavorites(favs);
+
+            const btn = document.querySelector(`.pet-fav-btn[data-id="${id}"]`);
+            if (btn) btn.classList.toggle('active', favs.includes(id));
+        }
+
+        function updateFavCounter() {
+            const counter = document.getElementById('favCounter');
+            if (!counter) return;
+            const count = getFavorites().length;
+            counter.textContent = count;
+            counter.classList.toggle('visible', count > 0);
+        }
+
+        function getUser() {
+            try {
+                return JSON.parse(localStorage.getItem('lapa_user') || '{}');
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function showToast(text, type = 'success') {
+            const old = document.querySelector('.toast-notification');
+            if (old) old.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
+            const colors = { success: '#466840', error: '#E85A5A', info: '#96B8E4' };
+            toast.style.backgroundColor = colors[type] || colors.success;
+            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}" aria-hidden="true"></i><span>${text}</span>`;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 2800);
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function getAgeWord(age) {
+            if (age === 1) return 'год';
+            if (age >= 2 && age <= 4) return 'года';
+            return 'лет';
+        }
+
+        function getAgeText(age) {
+            if (age < 1) return `${Math.round(age * 12)} мес.`;
+            return `${age} ${getAgeWord(age)}`;
+        }
+
+        function getAnimalsWord(count) {
+            if (count % 10 === 1 && count % 100 !== 11) return 'животное';
+            return 'животных';
+        }
+
+        const allPets = [];
+        const PER_PAGE = 8;
+        let currentPage = 1;
+        let filteredPets = [];
+        const tagColors = ['blue', 'green', 'sand'];
+
+        function goToAnimal(id) {
+            window.location.href = 'animal.html?id=' + id;
+        }
+
+        function openAdoptModal(petName) {
+            document.getElementById('adoptPetName').textContent = petName;
+            document.getElementById('adoptHasPets').checked = false;
+            document.getElementById('adoptHasChildren').checked = false;
+            openModal('adoptModal');
+        }
+
+        async function submitAdoption() {
+            const petName     = document.getElementById('adoptPetName').textContent;
+            const name        = document.getElementById('adoptName').value.trim();
+            const email       = document.getElementById('adoptEmail').value.trim();
+            const phone       = document.getElementById('adoptPhone').value.trim();
+            const housing     = document.getElementById('adoptHousing').value;
+            const hasPets     = document.getElementById('adoptHasPets').checked;
+            const hasChildren = document.getElementById('adoptHasChildren').checked;
+            const message     = document.getElementById('adoptMessage').value;
+
+            if (!name) { showToast('Укажите имя', 'error'); return; }
+            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
+            if (!phone) { showToast('Укажите телефон', 'error'); return; }
+
+            const pet = allPets.find(p => p.name === petName);
+            if (!pet) { showToast('Питомец не найден', 'error'); return; }
+
+            const user = getUser();
+
+            try {
+                const res = await fetch(`${API_URL}/api/applications`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        animal_id: pet.id,
+                        user_id: user.id || null,
+                        name, email, phone,
+                        housing_type: housing,
+                        has_other_pets: hasPets,
+                        has_children: hasChildren,
+                        message
+                    })
+                });
+
+                if (res.ok) {
+                    closeModal('adoptModal');
+                    showToast(`Заявка на ${petName} отправлена!`, 'success');
+                    ['adoptName', 'adoptEmail', 'adoptPhone', 'adoptMessage'].forEach(id =>
+                        document.getElementById(id).value = ''
+                    );
+                    document.getElementById('adoptHousing').value = '';
+                } else {
+                    showToast('Ошибка при отправке', 'error');
+                }
+            } catch (err) {
+                showToast('Сервер не отвечает', 'error');
+            }
+        }
+
+        function renderPets() {
+            const grid = document.getElementById('petsGrid');
+            if (!grid) return;
+
+            const start = (currentPage - 1) * PER_PAGE;
+            const pagePets = filteredPets.slice(start, start + PER_PAGE);
+            const favs = getFavorites();
+
+            grid.innerHTML = '';
+
+            if (pagePets.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fa-solid fa-search" style="font-size: 48px; color: var(--color-muted); margin-bottom: 20px;" aria-hidden="true"></i>
+                        <h3 style="color: var(--color-muted);">Ничего не найдено</h3>
+                        <p style="color: var(--color-muted); margin-bottom: 20px;">Попробуйте изменить фильтры</p>
+                        <button class="btn-blue-custom" onclick="resetFilters()">
+                            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Сбросить
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            pagePets.forEach((pet, idx) => {
+                const isFav = favs.includes(pet.id);
+                const tags = pet.tags || [];
+                const tagsHtml = tags
+                    .map((t, i) => `<span class="pet-tag ${tagColors[(idx + i) % 3]}">${t}</span>`)
+                    .join('');
+
+                const breedHtml = pet.breed
+                    ? `<span class="dot"></span><span>${pet.breed}</span>`
+                    : '';
+
+                grid.innerHTML += `
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="pet-card-custom">
+                            <div class="pet-image-wrapper" onclick="goToAnimal(${pet.id})">
+                                <button class="pet-fav-btn ${isFav ? 'active' : ''}" data-id="${pet.id}" onclick="event.stopPropagation(); toggleFavorite(${pet.id})" aria-label="В избранное">
+                                    <i class="fa-heart ${isFav ? 'fa-solid' : 'fa-regular'}" aria-hidden="true"></i>
+                                </button>
+                                <img src="${pet.img}" alt="${pet.name}" onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
+                            </div>
+                            <div class="pet-info-custom">
+                                <div class="pet-meta">
+                                    <span>${pet.species}</span>
+                                    ${breedHtml}
+                                    <span class="dot"></span>
+                                    <span>${getAgeText(pet.age)}</span>
+                                </div>
+                                <h3>${pet.name}</h3>
+                                <div class="pet-tags">${tagsHtml}</div>
+                                <button class="btn-pet" onclick="event.stopPropagation(); openAdoptModal('${pet.name}')">
+                                    Хочу забрать <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            if (!pagination) return;
+
+            const totalPages = Math.ceil(filteredPets.length / PER_PAGE);
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            pagination.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>`;
+
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+
+            pagination.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>`;
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredPets.length / PER_PAGE);
+            if (page < 1 || page > totalPages) return;
+
+            currentPage = page;
+            renderPets();
+            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function applyFilters() {
+            const species  = document.getElementById('filterSpecies').value;
+            const ageRange = document.getElementById('filterAge').value;
+            const gender   = document.getElementById('filterGender').value;
+            const size     = document.getElementById('filterSize').value;
+
+            filteredPets = allPets.filter(pet => {
+                if (species !== 'all' && pet.species !== species) return false;
+                if (gender  !== 'all' && pet.gender !== gender)   return false;
+                if (size    !== 'all' && pet.size !== size)       return false;
+
+                if (ageRange !== 'all') {
+                    if (ageRange === '0-1' && pet.age >= 1) return false;
+                    if (ageRange === '1-3' && (pet.age < 1 || pet.age > 3)) return false;
+                    if (ageRange === '3-7' && (pet.age < 3 || pet.age > 7)) return false;
+                    if (ageRange === '7+'  && pet.age < 7) return false;
+                }
+                return true;
+            });
+
+            currentPage = 1;
+            document.getElementById('filterResult').textContent =
+                `Найдено: ${filteredPets.length} ${getAnimalsWord(filteredPets.length)}`;
+            renderPets();
+            showToast(`Найдено ${filteredPets.length} ${getAnimalsWord(filteredPets.length)}`, 'info');
+        }
+
+        function resetFilters() {
+            ['filterSpecies', 'filterAge', 'filterGender', 'filterSize']
+                .forEach(id => document.getElementById(id).value = 'all');
+
+            filteredPets = [...allPets];
+            currentPage = 1;
+            document.getElementById('filterResult').textContent =
+                `Найдено: ${filteredPets.length} ${getAnimalsWord(filteredPets.length)}`;
+
+            renderPets();
+            showToast('Фильтры сброшены', 'info');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const pets = await fetch(`${API_URL}/api/animals`).then(r => r.json());
+
+            allPets.length = 0;
+            allPets.push(...pets);
+            filteredPets = [...allPets];
+
+            renderPets();
+            updateFavCounter();
+
+            document.getElementById('filterResult').textContent =
+                `Найдено: ${filteredPets.length} ${getAnimalsWord(filteredPets.length)}`;
+
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeModal(overlay.id);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
