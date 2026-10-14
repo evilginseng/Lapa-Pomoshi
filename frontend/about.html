@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О приюте — Лапа Помощи</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /*
+         * Стили блока "Наша миссия" — три карточки с иконками.
+         * Сетка 3 колонки, при наведении карточка приподнимается и подсвечивается рамкой.
+         */
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .mission-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            text-align: left;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            padding: 40px 32px;
+        }
+        .mission-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-green);
+        }
+        .mission-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 24px;
+        }
+        /* Три цветовых варианта иконки — синий, зелёный, песочный */
+        .mission-icon.blue  { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+        .mission-icon.green { background: var(--color-green-light); color: var(--color-dark-green); }
+        .mission-icon.sand  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
+
+        .mission-card h3 { font-size: 22px; margin-bottom: 12px; }
+        .mission-card p  { font-size: 15px; color: var(--color-text-light); margin: 0; }
+
+        /*
+         * Стили блока "История приюта" — горизонтальный таймлайн из 4 этапов.
+         * Между карточками проходит декоративная линия, точки служат маркерами.
+         */
+        .timeline-section {
+            padding: 80px 0;
+            background: var(--color-bg-alt);
+        }
+        .timeline-horizontal {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+            margin-top: 40px;
+        }
+        /* Горизонтальная градиентная линия, соединяющая точки таймлайна */
+        .timeline-horizontal::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: linear-gradient(90deg,
+                var(--color-blue) 0%,
+                var(--color-green) 33%,
+                var(--color-sand) 66%,
+                var(--color-dark-green) 100%);
+            border-radius: 3px;
+            z-index: 0;
+        }
+        .timeline-card {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .timeline-year-big {
+            font-family: var(--font-heading);
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 24px;
+            letter-spacing: -0.04em;
+            background: var(--color-bg-alt);
+            padding: 0 20px;
+        }
+        /* Каждому году соответствует свой акцентный цвет */
+        .timeline-card:nth-child(1) .timeline-year-big { color: var(--color-blue); }
+        .timeline-card:nth-child(2) .timeline-year-big { color: var(--color-green); }
+        .timeline-card:nth-child(3) .timeline-year-big { color: var(--color-sand); }
+        .timeline-card:nth-child(4) .timeline-year-big { color: var(--color-dark-green); }
+
+        /* Точка-маркер на таймлайне. Цвет рамки совпадает с цветом года выше */
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-white);
+            border: 4px solid var(--color-blue);
+            margin-bottom: 24px;
+            z-index: 2;
+            box-shadow: 0 0 0 6px var(--color-bg-alt);
+        }
+        .timeline-card:nth-child(2) .timeline-dot { border-color: var(--color-green); }
+        .timeline-card:nth-child(3) .timeline-dot { border-color: var(--color-sand); }
+        .timeline-card:nth-child(4) .timeline-dot { border-color: var(--color-dark-green); }
+
+        .timeline-card-content {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            padding: 28px 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+            width: 100%;
+        }
+        /* Верхняя граница карточки совпадает по цвету с точкой и годом */
+        .timeline-card:nth-child(1) .timeline-card-content { border-top-color: var(--color-blue); }
+        .timeline-card:nth-child(2) .timeline-card-content { border-top-color: var(--color-green); }
+        .timeline-card:nth-child(3) .timeline-card-content { border-top-color: var(--color-sand); }
+        .timeline-card:nth-child(4) .timeline-card-content { border-top-color: var(--color-dark-green); }
+
+        .timeline-card:hover .timeline-card-content {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .timeline-card-content h4 { font-size: 18px; margin-bottom: 10px; }
+        .timeline-card-content p {
+            font-size: 13.5px;
+            color: var(--color-text-light);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /*
+         * Стили блока "Наши результаты" — 4 карточки с цифрами
+         * на тёмном фоне с двумя декоративными кругами по углам.
+         */
+        .stats-section {
+            position: relative;
+            overflow: hidden;
+            margin: 80px auto;
+            max-width: 1200px;
+        }
+        .stats-bg {
+            position: relative;
+            padding: 100px 48px;
+            background: linear-gradient(135deg, var(--color-dark-green) 0%, #3a5735 100%);
+            border-radius: var(--radius-xl);
+        }
+        /* Верхний правый декоративный круг */
+        .stats-bg::before {
+            content: '';
+            position: absolute;
+            top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(150, 184, 228, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        /* Нижний левый декоративный круг */
+        .stats-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -100px; left: -100px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(233, 196, 142, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        /* Контент поверх декоративных кругов */
+        .stats-bg .container { position: relative; z-index: 2; }
+        .stats-bg .eyebrow { color: var(--color-sand); }
+        .stats-bg .section-title { color: var(--color-white); }
+        .stats-bg .section-subtitle { color: rgba(255, 255, 255, 0.75); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 40px 24px;
+            text-align: center;
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+        }
+        /* Цвет верхней границы каждой карточки */
+        .stat-card:nth-child(1) { border-top-color: var(--color-blue); }
+        .stat-card:nth-child(2) { border-top-color: var(--color-green); }
+        .stat-card:nth-child(3) { border-top-color: var(--color-sand); }
+        .stat-card:nth-child(4) { border-top-color: var(--color-white); }
+        .stat-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .stat-card .num {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 12px;
+            color: var(--color-white);
+        }
+        .stat-card .label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.5;
+        }
+
+        /*
+         * Стили блока "Наша команда" — 4 карточки с круглыми аватарами.
+         * Аватар — инициалы в цветном круге, цвет круга привязан к позиции карточки.
+         */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .team-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 36px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+        }
+        .team-card:nth-child(1) { border-top-color: var(--color-blue); }
+        .team-card:nth-child(2) { border-top-color: var(--color-green); }
+        .team-card:nth-child(3) { border-top-color: var(--color-sand); }
+        .team-card:nth-child(4) { border-top-color: var(--color-dark-green); }
+        .team-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 34px;
+            font-weight: 700;
+            border: 4px solid var(--color-white);
+            box-shadow: var(--shadow-md);
+        }
+        /* Цвет фона и текста аватара для каждой карточки */
+        .team-card:nth-child(1) .team-avatar { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+        .team-card:nth-child(2) .team-avatar { background: var(--color-green-light); color: var(--color-dark-green); }
+        .team-card:nth-child(3) .team-avatar { background: var(--color-sand-light);  color: var(--color-sand-dark); }
+        .team-card:nth-child(4) .team-avatar { background: var(--color-bg-alt);      color: var(--color-dark-green); }
+
+        .team-card h4 { font-size: 18px; margin-bottom: 4px; }
+        .team-role {
+            font-size: 13px;
+            color: var(--color-blue-dark);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .team-card p {
+            font-size: 13.5px;
+            color: var(--color-text-light);
+            margin: 0;
+        }
+
+        /*
+         * Адаптив.
+         * Планшет (до 991px) — сетки становятся двухколоночными,
+         * линия таймлайна скрывается (она не помещается между двумя рядами).
+         * Телефон (до 767px) — все сетки становятся одноколоночными.
+         */
+        @media (max-width: 991px) {
+            .mission-grid,
+            .stats-grid,
+            .team-grid { grid-template-columns: 1fr 1fr; }
+            .timeline-horizontal { grid-template-columns: 1fr 1fr; gap: 40px; }
+            .timeline-horizontal::before { display: none; }
+        }
+        @media (max-width: 767px) {
+            .mission-grid,
+            .stats-grid,
+            .team-grid,
+            .timeline-horizontal { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="index.html">
+                <div class="brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></div>
+                <div class="brand-text">Лапа Помощи<small>Приют для животных</small></div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Открыть меню">
+                <i class="fa-solid fa-bars" style="color: var(--color-dark-green); font-size: 20px;" aria-hidden="true"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html">Главная</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="catalog.html">Каталог</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="about.html">О приюте</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="contacts.html">Контакты</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="donate.html">Помощь</a></li>
+                </ul>
+            </div>
+            <a class="btn-login d-none d-lg-inline-flex" href="account.html">
+                <i class="fa-regular fa-user" aria-hidden="true"></i> Кабинет
+                <span class="fav-counter" id="favCounter">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="page-header-gradient">
+        <div class="container">
+            <span class="eyebrow">О приюте</span>
+            <h1 class="page-title">Мы меняем жизни с 2021 года</h1>
+            <p class="page-subtitle">«Лапа Помощи» — это команда волонтёров, которая помогает бездомным животным найти новый дом, заботу и любовь</p>
+        </div>
+    </section>
+
+    <section class="section container">
+        <span class="eyebrow green">Наша миссия</span>
+        <h2 class="section-title">Что для нас важно</h2>
+        <p class="section-subtitle">Три главных принципа, на которых строится вся наша работа</p>
+        <div class="mission-grid">
+            <div class="mission-card">
+                <div class="mission-icon blue"><i class="fa-solid fa-heart" aria-hidden="true"></i></div>
+                <h3>Забота</h3>
+                <p>Каждое животное получает внимание, ласку, правильное питание и медицинский уход. Мы относимся к ним как к членам семьи.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon green"><i class="fa-solid fa-shield-dog" aria-hidden="true"></i></div>
+                <h3>Здоровье</h3>
+                <p>Все питомцы проходят вакцинацию, стерилизацию, обработку от паразитов и регулярные осмотры у ветеринара.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon sand"><i class="fa-solid fa-house" aria-hidden="true"></i></div>
+                <h3>Дом навсегда</h3>
+                <p>Мы ищем ответственных хозяев, проверяем условия содержания и остаёмся на связи после передачи животного.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="timeline-section">
+        <div class="container">
+            <span class="eyebrow">Наша история</span>
+            <h2 class="section-title">Путь длиной в 5 лет</h2>
+            <p class="section-subtitle">От маленькой инициативы до крупного приюта, который спас сотни жизней</p>
+            <div class="timeline-horizontal">
+                <div class="timeline-card">
+                    <div class="timeline-year-big">2021</div>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card-content">
+                        <h4>Начало пути</h4>
+                        <p>Пять волонтёров объединились, чтобы помочь бездомным животным.</p>
+                    </div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-year-big">2022</div>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card-content">
+                        <h4>Первые 100 спасений</h4>
+                        <p>Мы спасли 100 животных, нашли дом для 60 из них.</p>
+                    </div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-year-big">2024</div>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card-content">
+                        <h4>Новое здание и команда</h4>
+                        <p>Переехали в просторное здание в Сыктывкаре.</p>
+                    </div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-year-big">2026</div>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card-content">
+                        <h4>500+ спасённых жизней</h4>
+                        <p>Сегодня в приюте живут более 200 питомцев.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-bg">
+            <div class="container">
+                <span class="eyebrow">Цифры</span>
+                <h2 class="section-title">Наши результаты</h2>
+                <p class="section-subtitle">За пять лет работы мы многого добились вместе с вами</p>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="num">500+</div><div class="label">Спасённых животных</div></div>
+                    <div class="stat-card"><div class="num">124</div><div class="label">Нашли дом в 2026 году</div></div>
+                    <div class="stat-card"><div class="num">200+</div><div class="label">Питомцев сейчас в приюте</div></div>
+                    <div class="stat-card"><div class="num">50+</div><div class="label">Волонтёров и кураторов</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container">
+        <span class="eyebrow">Наша команда</span>
+        <h2 class="section-title">Люди, которые помогают</h2>
+        <p class="section-subtitle">Волонтёры, ветеринары и кураторы — те, кто каждый день рядом с животными</p>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar">АК</div>
+                <h4>Анна Ковалёва</h4>
+                <div class="team-role">Основатель</div>
+                <p>Создала приют в 2021 году, курирует все ключевые направления</p>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">ДЛ</div>
+                <h4>Дмитрий Лебедев</h4>
+                <div class="team-role">Ветеринар</div>
+                <p>Проводит осмотры, операции и вакцинацию</p>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">МП</div>
+                <h4>Мария Петрова</h4>
+                <div class="team-role">Куратор усыновления</div>
+                <p>Общается с потенциальными хозяевами</p>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar">СИ</div>
+                <h4>Сергей Иванов</h4>
+                <div class="team-role">Волонтёр</div>
+                <p>Помогает с выгулом, кормлением и уборкой</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="copyright-custom" style="margin-top: 0; border: none; padding-top: 0;">
+                &copy; 2026 Приют «Лапа Помощи». Все права защищены.
+                <a href="admin.html" class="admin-link">
+                    <i class="fa-solid fa-lock" style="font-size: 10px;" aria-hidden="true"></i> Вход для сотрудников
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /*
+         * Возвращает массив id избранных животных из localStorage.
+         * Если данных нет или JSON повреждён — возвращает пустой массив,
+         * чтобы дальнейший код не падал на парсинге.
+         */
+        function getFavorites() {
+            try {
+                const fav = localStorage.getItem('lapa_favorites');
+                return fav ? JSON.parse(fav) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        /*
+         * Обновляет счётчик избранного в шапке сайта.
+         * Класс visible добавляется только при count > 0 — так счётчик
+         * не отображается, если избранное пустое.
+         */
+        function updateFavCounter() {
+            const counter = document.getElementById('favCounter');
+            if (!counter) return;
+            const count = getFavorites().length;
+            counter.textContent = count;
+            counter.classList.toggle('visible', count > 0);
+        }
+
+        /* Счётчик обновляется один раз при загрузке страницы */
+        document.addEventListener('DOMContentLoaded', updateFavCounter);
+    </script>
+</body>
+</html>
