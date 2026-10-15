@@ -447,10 +447,11 @@
                     .map((t, i) => `<span class="pet-tag ${tagColors[(idx + i) % 3]}">${t}</span>`)
                     .join('');
 
-                // Порода показывается, только если заполнена в базе
                 const breedHtml = pet.breed
                     ? `<span class="dot"></span><span>${pet.breed}</span>`
                     : '';
+
+                const petPhoto = (pet.images && pet.images[0]) || pet.img;
 
                 grid.innerHTML += `
                     <div class="col-xl-3 col-lg-4 col-md-6">
@@ -459,7 +460,7 @@
                                 <button class="pet-fav-btn ${isFav ? 'active' : ''}" data-id="${pet.id}" onclick="event.stopPropagation(); toggleFavorite(${pet.id})" aria-label="В избранное">
                                     <i class="fa-heart ${isFav ? 'fa-solid' : 'fa-regular'}" aria-hidden="true"></i>
                                 </button>
-                                <img src="${pet.img}" alt="${pet.name}" onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
+                                <img src="${petPhoto}" alt="${pet.name}" onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
                             </div>
                             <div class="pet-info-custom">
                                 <div class="pet-meta">
