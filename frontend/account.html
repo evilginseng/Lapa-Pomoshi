@@ -11,10 +11,6 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /*
-         * Карточка профиля в верхней части страницы.
-         * Содержит аватар, имя, контакты и два счётчика — избранное и заявки.
-         */
         .profile-card {
             background: var(--color-white);
             border-radius: var(--radius-lg);
@@ -28,7 +24,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* Верхняя декоративная полоса с градиентом из четырёх цветов сайта */
         .profile-card::before {
             content: '';
             position: absolute;
@@ -57,7 +52,6 @@
         .profile-info h3 { font-size: 26px; margin-bottom: 6px; }
         .profile-info p  { font-size: 14px; color: var(--color-muted); margin-bottom: 4px; }
 
-        /* Блок с двумя счётчиками справа от имени. margin-left: auto прижимает к правому краю */
         .profile-stats { display: flex; gap: 32px; margin-left: auto; }
         .profile-stat .num {
             font-family: var(--font-heading);
@@ -74,7 +68,6 @@
             margin-top: 6px;
         }
 
-        /* ---------- Переключатель вкладок ---------- */
         .tabs-custom {
             display: flex;
             justify-content: center;
@@ -101,11 +94,9 @@
             color: var(--color-white);
         }
 
-        /* По умолчанию вкладки скрыты. Класс active показывает нужную */
         .tab-content-custom { display: none; }
         .tab-content-custom.active { display: block; }
 
-        /* ---------- Карточка заявки ---------- */
         .application-card {
             background: var(--color-white);
             border-radius: var(--radius-md);
@@ -122,7 +113,6 @@
         .application-info h4 { font-size: 18px; margin-bottom: 4px; }
         .application-info p  { font-size: 13px; color: var(--color-muted); margin: 0; }
 
-        /* Цвет статуса заявки — новый / в рассмотрении / одобрен / отклонён */
         .status-badge {
             padding: 8px 16px;
             border-radius: 50px;
@@ -136,7 +126,6 @@
         .status-approved  { background: var(--color-green-light); color: var(--color-dark-green); }
         .status-rejected  { background: rgba(232, 90, 90, 0.15);  color: var(--color-red); }
 
-        /* ---------- Заглушка для пустого состояния ---------- */
         .empty-state { padding: 80px 20px; text-align: center; }
         .empty-state-icon {
             width: 100px;
@@ -158,11 +147,6 @@
             margin: 0 auto 28px;
         }
 
-        /*
-         * Адаптив.
-         * Планшет (до 991px) — карточка профиля становится вертикальной, счётчики по центру.
-         * Телефон (до 767px) — карточка заявки тоже становится вертикальной.
-         */
         @media (max-width: 991px) {
             .profile-card { flex-direction: column; text-align: center; }
             .profile-stats { margin-left: 0; }
@@ -262,14 +246,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        /* Базовый адрес API. При деплое заменить на публичный URL бэкенда */
         const API_URL = 'https://lapa-pomoshi-12sn.onrender.com';
 
-        /*
-         * Возвращает массив id избранных животных из localStorage.
-         * Если данных нет или JSON повреждён — возвращает пустой массив,
-         * чтобы дальнейший код не падал на парсинге.
-         */
         function getFavorites() {
             try {
                 return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
@@ -278,24 +256,14 @@
             }
         }
 
-        /* Сохраняет массив избранного в localStorage */
         function saveFavorites(favs) {
             localStorage.setItem('lapa_favorites', JSON.stringify(favs));
         }
 
-        /*
-         * Проверяет, авторизован ли пользователь.
-         * Признак авторизации — наличие токена в localStorage,
-         * который сохраняется после успешного входа через login.html.
-         */
         function isUserAuthorized() {
             return localStorage.getItem('lapa_token') !== null;
         }
 
-        /*
-         * Возвращает объект пользователя из localStorage.
-         * Ожидаемые поля: id, full_name, email, phone, role.
-         */
         function getUser() {
             try {
                 return JSON.parse(localStorage.getItem('lapa_user') || '{}');
@@ -304,7 +272,6 @@
             }
         }
 
-        /* Очищает токен и данные пользователя, перенаправляет на главную */
         function userLogout() {
             localStorage.removeItem('lapa_token');
             localStorage.removeItem('lapa_user');
@@ -312,27 +279,17 @@
             window.location.href = 'index.html';
         }
 
-        /* Склонение слова "год" в зависимости от возраста */
         function getAgeWord(age) {
             if (age === 1) return 'год';
             if (age >= 2 && age <= 4) return 'года';
             return 'лет';
         }
 
-        /*
-         * Возвращает текстовое представление возраста.
-         * До года — в месяцах, дальше — в годах с правильным склонением.
-         */
         function getAgeText(age) {
             if (age < 1) return `${Math.round(age * 12)} мес.`;
             return `${age} ${getAgeWord(age)}`;
         }
 
-        /*
-         * Переключает активную вкладку в личном кабинете.
-         * Снимает класс active со всех кнопок и блоков,
-         * затем ставит его на выбранные.
-         */
         function switchTab(tab, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content-custom').forEach(c => c.classList.remove('active'));
@@ -340,7 +297,6 @@
             document.getElementById('tab-' + tab).classList.add('active');
         }
 
-        /* Удаляет животное из избранного и перерисовывает список */
         function removeFavorite(id) {
             let favs = getFavorites();
             favs = favs.filter(f => f !== id);
@@ -349,11 +305,6 @@
             updateStats();
         }
 
-        /*
-         * Загружает список животных из API, оставляет только те,
-         * что есть в избранном, и рисует карточки.
-         * Если избранное пустое — показывает заглушку.
-         */
         async function renderFavorites() {
             const favs = getFavorites();
             const grid = document.getElementById('favoritesGrid');
@@ -383,6 +334,8 @@
                         .map((t, i) => `<span class="pet-tag ${tagColors[(idx + i) % 3]}">${t}</span>`)
                         .join('');
 
+                    const petPhoto = (pet.images && pet.images[0]) || pet.img;
+
                     grid.innerHTML += `
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="pet-card-custom">
@@ -390,7 +343,7 @@
                                     <button class="pet-fav-btn active" onclick="removeFavorite(${pet.id})" title="Удалить из избранного">
                                         <i class="fa-solid fa-heart" aria-hidden="true"></i>
                                     </button>
-                                    <img src="${pet.img}" alt="${pet.name}">
+                                    <img src="${petPhoto}" alt="${pet.name}" onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
                                 </div>
                                 <div class="pet-info-custom">
                                     <div class="pet-meta">
@@ -414,11 +367,6 @@
             }
         }
 
-        /*
-         * Загружает заявки текущего пользователя из API
-         * по его id и рисует их списком.
-         * Если заявок нет — показывает заглушку.
-         */
         async function renderApplications() {
             const user = getUser();
             const list = document.getElementById('applicationsList');
@@ -444,8 +392,6 @@
                 list.innerHTML = '';
 
                 apps.forEach(app => {
-                    // Приводим статус к нижнему регистру и убираем пробелы,
-                    // чтобы 'Pending', ' pending ', 'PENDING' и т.п. обрабатывались одинаково
                     const rawStatus = (app.status || '').toString().trim().toLowerCase();
 
                     let statusClass = 'status-new';
@@ -473,8 +419,6 @@
                         statusClass = 'status-new';
                         statusText  = 'Новая';
                     } else {
-                        // Неизвестный статус — показываем как есть, чтобы было видно,
-                        // какое именно значение приходит из БД
                         statusClass = 'status-new';
                         statusText  = app.status || 'Новая';
                     }
@@ -495,10 +439,6 @@
             }
         }
 
-        /*
-         * Обновляет два счётчика в карточке профиля:
-         * количество избранного (из localStorage) и количество заявок (из API).
-         */
         async function updateStats() {
             document.getElementById('favCount').textContent = getFavorites().length;
 
@@ -517,13 +457,6 @@
             }
         }
 
-        /*
-         * Инициализация страницы.
-         * 1. Проверяет авторизацию — неавторизованных перенаправляет на login.html.
-         * 2. Заполняет имя, email, телефон из localStorage.
-         * 3. Загружает избранное, заявки и счётчики.
-         * 4. Показывает страницу (body изначально скрыт через style="display: none").
-         */
         document.addEventListener('DOMContentLoaded', async () => {
             if (!isUserAuthorized()) {
                 window.location.href = 'login.html';
