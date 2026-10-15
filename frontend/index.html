@@ -11,6 +11,32 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
+        /* ============================================================
+           АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+           ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-zoom.visible { opacity: 1; transform: scale(1); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal-zoom {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
         .hero-section { padding: 40px 0 40px; }
         .hero-banner {
             background: linear-gradient(135deg, #F7F4F0 0%, #E8EFF8 50%, #F7E7CD 100%);
@@ -145,9 +171,6 @@
 
         .catalog-section { padding: 40px 0 80px; }
 
-        /* ============================================================
-           КНОПКА «СМОТРЕТЬ ВЕСЬ КАТАЛОГ»
-           ============================================================ */
         .catalog-cta {
             text-align: center;
             margin-top: 48px;
@@ -482,7 +505,7 @@
 
     <section class="hero-section">
         <div class="container">
-            <div class="hero-banner">
+            <div class="hero-banner reveal-zoom">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-6">
                         <span class="eyebrow">Приют для животных с 2021 года</span>
@@ -515,12 +538,9 @@
         </div>
     </section>
 
-    <!-- ============================================================
-         КАТАЛОГ — только 4 карточки + кнопка «Смотреть весь каталог»
-         ============================================================ -->
     <section class="catalog-section" id="catalog">
         <div class="container">
-            <div style="margin-bottom: 40px; text-align: center;">
+            <div class="reveal" style="margin-bottom: 40px; text-align: center;">
                 <span class="eyebrow green">Кто ждёт вас сегодня</span>
                 <h2 class="section-title">Познакомьтесь с животными</h2>
                 <p class="section-subtitle">которые мечтают о своём человеке</p>
@@ -528,7 +548,7 @@
 
             <div class="row g-4 justify-content-center" id="petsGrid"></div>
 
-            <div class="catalog-cta">
+            <div class="catalog-cta reveal">
                 <a href="catalog.html" class="btn-primary-custom">
                     <i class="fa-solid fa-paw" aria-hidden="true"></i> Смотреть весь каталог
                 </a>
@@ -538,12 +558,12 @@
 
     <section class="steps-section" id="steps">
         <div class="container">
-            <div class="steps-header">
+            <div class="steps-header reveal">
                 <span class="eyebrow sand">Простой путь к другу</span>
                 <h2 class="steps-title">Как забрать питомца из приюта</h2>
                 <p class="steps-subtitle">Всего четыре шага отделяют вас от встречи с новым членом семьи</p>
             </div>
-            <div class="steps-grid">
+            <div class="steps-grid reveal">
                 <div class="step-card"><div class="step-number">01</div><h3>Выберите питомца</h3><p>Просмотрите каталог и найдите того, кто вам понравился.</p></div>
                 <div class="step-card"><div class="step-number">02</div><h3>Оставьте заявку</h3><p>Нажмите «Хочу забрать» на карточке и заполните форму.</p></div>
                 <div class="step-card"><div class="step-number">03</div><h3>Познакомьтесь</h3><p>Мы свяжемся с вами и организуем встречу в приюте.</p></div>
@@ -554,12 +574,12 @@
 
     <section class="bento-section">
         <div class="container">
-            <div class="bento-header">
+            <div class="bento-header reveal">
                 <span class="eyebrow">Жизнь приюта</span>
                 <h2 class="bento-title">Истории, новости и события</h2>
                 <p class="bento-subtitle">Узнайте, чем живёт наш приют, и присоединяйтесь к добрым делам</p>
             </div>
-            <div class="bento-grid">
+            <div class="bento-grid reveal">
                 <a href="catalog.html" class="bento-item large-left" style="background-image: url('https://i.pinimg.com/1200x/5e/7c/55/5e7c551fb5d32a9105c12ba0ff70dfc0.jpg');">
                     <div class="bento-content"><span class="bento-tag blue">История успеха</span><h3>Как Локи нашёл семью</h3><p>Пёс из приюта стал лучшим другом для семьи</p></div>
                 </a>
@@ -582,7 +602,7 @@
         </div>
     </section>
 
-    <section class="donation-section-custom">
+    <section class="donation-section-custom reveal-zoom">
         <span class="eyebrow">Поддержите приют</span>
         <h2>Ваша помощь меняет жизни</h2>
         <p>Каждое пожертвование помогает нам кормить, лечить и находить дом для животных.</p>
@@ -670,34 +690,22 @@
         const API_URL = 'https://lapa-pomoshi-12sn.onrender.com';
 
         function getFavorites() {
-            try {
-                return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
-            } catch (e) {
-                return [];
-            }
+            try { return JSON.parse(localStorage.getItem('lapa_favorites') || '[]'); }
+            catch (e) { return []; }
         }
 
         function saveFavorites(favs) {
-            try {
-                localStorage.setItem('lapa_favorites', JSON.stringify(favs));
-            } catch (e) {}
+            try { localStorage.setItem('lapa_favorites', JSON.stringify(favs)); }
+            catch (e) {}
             updateFavCounter();
         }
 
         function toggleFavorite(id) {
             let favs = getFavorites();
             const index = favs.indexOf(id);
-
-            if (index > -1) {
-                favs.splice(index, 1);
-                showToast('Удалено из избранного', 'info');
-            } else {
-                favs.push(id);
-                showToast('Добавлено в избранное', 'success');
-            }
-
+            if (index > -1) { favs.splice(index, 1); showToast('Удалено из избранного', 'info'); }
+            else { favs.push(id); showToast('Добавлено в избранное', 'success'); }
             saveFavorites(favs);
-
             const btn = document.querySelector(`.pet-fav-btn[data-id="${id}"]`);
             if (btn) btn.classList.toggle('active', favs.includes(id));
         }
@@ -711,25 +719,19 @@
         }
 
         function getUser() {
-            try {
-                return JSON.parse(localStorage.getItem('lapa_user') || '{}');
-            } catch (e) {
-                return {};
-            }
+            try { return JSON.parse(localStorage.getItem('lapa_user') || '{}'); }
+            catch (e) { return {}; }
         }
 
         function showToast(text, type = 'success') {
             const old = document.querySelector('.toast-notification');
             if (old) old.remove();
-
             const toast = document.createElement('div');
             toast.className = 'toast-notification';
-
             const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', info: 'fa-circle-info' };
             const colors = { success: '#466840', error: '#E85A5A', info: '#96B8E4' };
             toast.style.backgroundColor = colors[type] || colors.success;
             toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}" aria-hidden="true"></i><span>${text}</span>`;
-
             document.body.appendChild(toast);
             setTimeout(() => toast.classList.add('show'), 50);
             setTimeout(() => {
@@ -740,18 +742,12 @@
 
         function openModal(id) {
             const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+            if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
         }
 
         function closeModal(id) {
             const modal = document.getElementById(id);
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+            if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; }
         }
 
         function getAgeWord(age) {
@@ -766,7 +762,7 @@
         }
 
         const allPets = [];
-        const HOMEPAGE_LIMIT = 4;    /* ← сколько карточек показывать на главной */
+        const HOMEPAGE_LIMIT = 4;
         const tagColors = ['blue', 'green', 'sand'];
 
         function goToAnimal(id) {
@@ -833,7 +829,6 @@
             const grid = document.getElementById('petsGrid');
             if (!grid) return;
 
-            /* Берём только первые 4 животных */
             const pagePets = allPets.slice(0, HOMEPAGE_LIMIT);
             const favs = getFavorites();
 
@@ -903,6 +898,29 @@
                     if (e.target === overlay) closeModal(overlay.id);
                 });
             });
+
+            /* ============================================================
+               АНИМАЦИИ ПОЯВЛЕНИЯ БЛОКОВ ПРИ СКРОЛЛЕ
+               ============================================================ */
+            const elements = document.querySelectorAll('.reveal, .reveal-zoom');
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(el => observer.observe(el));
         });
     </script>
 </body>
