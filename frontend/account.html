@@ -11,6 +11,32 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
+        /* ============================================================
+           АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+           ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-zoom.visible { opacity: 1; transform: scale(1); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal-zoom {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
         .account-section { padding: 30px 0 80px; }
 
         .account-grid {
@@ -345,7 +371,8 @@
     <section class="account-section container">
         <div class="account-grid">
 
-            <div class="profile-card">
+            <!-- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ — появляется с zoom -->
+            <div class="profile-card reveal-zoom">
                 <div class="profile-avatar">
                     <i class="fa-solid fa-user" aria-hidden="true"></i>
                 </div>
@@ -362,9 +389,10 @@
                 </button>
             </div>
 
+            <!-- ПРАВАЯ ЧАСТЬ -->
             <div>
 
-                <div class="tabs-wrapper">
+                <div class="tabs-wrapper reveal">
                     <div class="tabs-custom">
                         <button class="tab-btn active" onclick="switchTab('favorites', this)">Избранное</button>
                         <button class="tab-btn" onclick="switchTab('applications', this)">Мои заявки</button>
@@ -460,6 +488,8 @@
             document.querySelectorAll('.tab-content-custom').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById('tab-' + tab).classList.add('active');
+            /* После переключения вкладки — снова запускаем анимацию для новых карточек */
+            initScrollAnimations();
         }
 
         function removeFavorite(id) {
@@ -468,6 +498,31 @@
             saveFavorites(favs);
             renderFavorites();
             updateStats();
+        }
+
+        /* ============================================================
+           АНИМАЦИИ ПОЯВЛЕНИЯ
+           ============================================================ */
+        function initScrollAnimations() {
+            const elements = document.querySelectorAll('.reveal:not(.visible), .reveal-zoom:not(.visible), .fav-card:not(.visible), .application-card:not(.visible)');
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(el => observer.observe(el));
         }
 
         async function renderFavorites() {
@@ -489,12 +544,12 @@
                 const allPets = await res.json();
                 const favPets = allPets.filter(p => favs.includes(p.id));
 
-                favPets.forEach((pet) => {
+                favPets.forEach((pet, idx) => {
                     const petPhoto = (pet.images && pet.images[0]) || pet.img;
 
                     grid.innerHTML += `
                         <div class="col-xl-4 col-lg-4 col-md-6">
-                            <div class="fav-card">
+                            <div class="fav-card reveal" style="transition-delay: ${Math.min(idx * 70, 400)}ms">
                                 <div class="fav-card-img">
                                     <img src="${petPhoto}" alt="${pet.name}"
                                          onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
@@ -517,6 +572,8 @@
                         </div>
                     `;
                 });
+
+                initScrollAnimations();
             } catch (err) {
                 console.error(err);
                 grid.innerHTML = '<p style="text-align:center; color: var(--color-muted);">Ошибка загрузки</p>';
@@ -547,7 +604,7 @@
                 empty.style.display = 'none';
                 list.innerHTML = '';
 
-                apps.forEach(app => {
+                apps.forEach((app, idx) => {
                     const rawStatus = (app.status || '').toString().trim().toLowerCase();
 
                     let statusClass = 'status-new';
@@ -568,7 +625,7 @@
                     }
 
                     list.innerHTML += `
-                        <div class="application-card">
+                        <div class="application-card reveal" style="transition-delay: ${Math.min(idx * 70, 400)}ms">
                             <div class="application-info">
                                 <h4>${app.pet_name || 'Питомец'}</h4>
                                 <p>Заявка от ${new Date(app.created_at).toLocaleDateString('ru-RU')}</p>
@@ -577,6 +634,8 @@
                         </div>
                     `;
                 });
+
+                initScrollAnimations();
             } catch (err) {
                 console.error(err);
                 list.innerHTML = '<p style="text-align:center; color: var(--color-muted);">Ошибка загрузки</p>';
@@ -616,6 +675,7 @@
             await updateStats();
 
             document.body.style.display = 'block';
+            initScrollAnimations();
         });
     </script>
 </body>
