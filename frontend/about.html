@@ -11,10 +11,38 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /*
-         * Стили блока "Наша миссия" — три карточки с иконками.
-         * Сетка 3 колонки, при наведении карточка приподнимается и подсвечивается рамкой.
-         */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.85);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .reveal-zoom.visible { opacity: 1; transform: scale(1); }
+
+        .reveal[data-delay="100"], .reveal-zoom[data-delay="100"] { transition-delay: 0.1s; }
+        .reveal[data-delay="200"], .reveal-zoom[data-delay="200"] { transition-delay: 0.2s; }
+        .reveal[data-delay="300"], .reveal-zoom[data-delay="300"] { transition-delay: 0.3s; }
+        .reveal[data-delay="400"], .reveal-zoom[data-delay="400"] { transition-delay: 0.4s; }
+        .reveal[data-delay="500"], .reveal-zoom[data-delay="500"] { transition-delay: 0.5s; }
+        .reveal[data-delay="600"], .reveal-zoom[data-delay="600"] { transition-delay: 0.6s; }
+        .reveal[data-delay="700"], .reveal-zoom[data-delay="700"] { transition-delay: 0.7s; }
+        .reveal[data-delay="800"], .reveal-zoom[data-delay="800"] { transition-delay: 0.8s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal-zoom {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
         .mission-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -44,7 +72,6 @@
             font-size: 30px;
             margin-bottom: 24px;
         }
-        /* Три цветовых варианта иконки — синий, зелёный, песочный */
         .mission-icon.blue  { background: var(--color-blue-light);  color: var(--color-blue-dark); }
         .mission-icon.green { background: var(--color-green-light); color: var(--color-dark-green); }
         .mission-icon.sand  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
@@ -52,10 +79,6 @@
         .mission-card h3 { font-size: 22px; margin-bottom: 12px; }
         .mission-card p  { font-size: 15px; color: var(--color-text-light); margin: 0; }
 
-        /*
-         * Стили блока "История приюта" — горизонтальный таймлайн из 4 этапов.
-         * Между карточками проходит декоративная линия, точки служат маркерами.
-         */
         .timeline-section {
             padding: 80px 0;
             background: var(--color-bg-alt);
@@ -67,7 +90,6 @@
             position: relative;
             margin-top: 40px;
         }
-        /* Горизонтальная градиентная линия, соединяющая точки таймлайна */
         .timeline-horizontal::before {
             content: '';
             position: absolute;
@@ -101,13 +123,11 @@
             background: var(--color-bg-alt);
             padding: 0 20px;
         }
-        /* Каждому году соответствует свой акцентный цвет */
         .timeline-card:nth-child(1) .timeline-year-big { color: var(--color-blue); }
         .timeline-card:nth-child(2) .timeline-year-big { color: var(--color-green); }
         .timeline-card:nth-child(3) .timeline-year-big { color: var(--color-sand); }
         .timeline-card:nth-child(4) .timeline-year-big { color: var(--color-dark-green); }
 
-        /* Точка-маркер на таймлайне. Цвет рамки совпадает с цветом года выше */
         .timeline-dot {
             width: 20px;
             height: 20px;
@@ -131,7 +151,6 @@
             border-top: 4px solid transparent;
             width: 100%;
         }
-        /* Верхняя граница карточки совпадает по цвету с точкой и годом */
         .timeline-card:nth-child(1) .timeline-card-content { border-top-color: var(--color-blue); }
         .timeline-card:nth-child(2) .timeline-card-content { border-top-color: var(--color-green); }
         .timeline-card:nth-child(3) .timeline-card-content { border-top-color: var(--color-sand); }
@@ -149,10 +168,6 @@
             line-height: 1.6;
         }
 
-        /*
-         * Стили блока "Наши результаты" — 4 карточки с цифрами
-         * на тёмном фоне с двумя декоративными кругами по углам.
-         */
         .stats-section {
             position: relative;
             overflow: hidden;
@@ -165,7 +180,6 @@
             background: linear-gradient(135deg, var(--color-dark-green) 0%, #3a5735 100%);
             border-radius: var(--radius-xl);
         }
-        /* Верхний правый декоративный круг */
         .stats-bg::before {
             content: '';
             position: absolute;
@@ -174,7 +188,6 @@
             background: radial-gradient(circle, rgba(150, 184, 228, 0.3) 0%, transparent 70%);
             border-radius: 50%;
         }
-        /* Нижний левый декоративный круг */
         .stats-bg::after {
             content: '';
             position: absolute;
@@ -183,7 +196,6 @@
             background: radial-gradient(circle, rgba(233, 196, 142, 0.25) 0%, transparent 70%);
             border-radius: 50%;
         }
-        /* Контент поверх декоративных кругов */
         .stats-bg .container { position: relative; z-index: 2; }
         .stats-bg .eyebrow { color: var(--color-sand); }
         .stats-bg .section-title { color: var(--color-white); }
@@ -204,7 +216,6 @@
             transition: var(--transition);
             border-top: 4px solid transparent;
         }
-        /* Цвет верхней границы каждой карточки */
         .stat-card:nth-child(1) { border-top-color: var(--color-blue); }
         .stat-card:nth-child(2) { border-top-color: var(--color-green); }
         .stat-card:nth-child(3) { border-top-color: var(--color-sand); }
@@ -227,10 +238,6 @@
             line-height: 1.5;
         }
 
-        /*
-         * Стили блока "Наша команда" — 4 карточки с круглыми аватарами.
-         * Аватар — инициалы в цветном круге, цвет круга привязан к позиции карточки.
-         */
         .team-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -267,7 +274,6 @@
             border: 4px solid var(--color-white);
             box-shadow: var(--shadow-md);
         }
-        /* Цвет фона и текста аватара для каждой карточки */
         .team-card:nth-child(1) .team-avatar { background: var(--color-blue-light);  color: var(--color-blue-dark); }
         .team-card:nth-child(2) .team-avatar { background: var(--color-green-light); color: var(--color-dark-green); }
         .team-card:nth-child(3) .team-avatar { background: var(--color-sand-light);  color: var(--color-sand-dark); }
@@ -288,24 +294,289 @@
             margin: 0;
         }
 
-        /*
-         * Адаптив.
-         * Планшет (до 991px) — сетки становятся двухколоночными,
-         * линия таймлайна скрывается (она не помещается между двумя рядами).
-         * Телефон (до 767px) — все сетки становятся одноколоночными.
-         */
+        /* ============================================================ */
+        .stories-section {
+            padding: 80px 0;
+        }
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .story-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 36px 30px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+            text-align: left;
+        }
+        .story-card:nth-child(1) { border-top-color: var(--color-blue); }
+        .story-card:nth-child(2) { border-top-color: var(--color-green); }
+        .story-card:nth-child(3) { border-top-color: var(--color-sand); }
+        .story-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .story-card h4 {
+            font-size: 24px;
+            margin-bottom: 6px;
+            font-family: var(--font-heading);
+        }
+        .story-card:nth-child(1) h4 { color: var(--color-blue-dark); }
+        .story-card:nth-child(2) h4 { color: var(--color-dark-green); }
+        .story-card:nth-child(3) h4 { color: var(--color-sand-dark); }
+        .story-found {
+            font-size: 12px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .story-card p {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .work-section {
+            padding: 80px 0;
+            background: var(--color-bg-alt);
+        }
+        .work-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .work-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-align: left;
+            border-left: 5px solid transparent;
+        }
+        .work-card:nth-child(1) { border-left-color: var(--color-blue); }
+        .work-card:nth-child(2) { border-left-color: var(--color-green); }
+        .work-card:nth-child(3) { border-left-color: var(--color-sand); }
+        .work-card:nth-child(4) { border-left-color: var(--color-dark-green); }
+        .work-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .work-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .work-card:nth-child(1) .work-icon { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+        .work-card:nth-child(2) .work-icon { background: var(--color-green-light); color: var(--color-dark-green); }
+        .work-card:nth-child(3) .work-icon { background: var(--color-sand-light);  color: var(--color-sand-dark); }
+        .work-card:nth-child(4) .work-icon { background: var(--color-bg-alt);      color: var(--color-dark-green); }
+
+        .work-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .work-card p {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .quote-section {
+            padding: 80px 0;
+        }
+        .quote-box {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--color-sand-light) 0%, var(--color-bg-alt) 100%);
+            border-radius: var(--radius-xl);
+            padding: 60px 56px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .quote-box::before {
+            content: '';
+            position: absolute;
+            top: -80px; right: -80px;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(150, 184, 228, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .quote-box::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -80px;
+            width: 240px; height: 240px;
+            background: radial-gradient(circle, rgba(158, 205, 65, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .quote-box > * { position: relative; z-index: 2; }
+        .quote-text {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            line-height: 1.5;
+            color: var(--color-dark-green);
+            font-style: italic;
+            margin-bottom: 32px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
+        .quote-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+        .quote-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-blue-dark);
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--color-white);
+        }
+        .quote-author-info { text-align: left; }
+        .quote-author-info strong {
+            display: block;
+            font-size: 15px;
+            color: var(--color-dark-green);
+            font-weight: 700;
+        }
+        .quote-author-info span {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .help-section {
+            padding: 80px 0;
+            background: var(--color-bg-alt);
+        }
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .help-card {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-top: 4px solid transparent;
+        }
+        .help-card:nth-child(1) { border-top-color: var(--color-blue); }
+        .help-card:nth-child(2) { border-top-color: var(--color-green); }
+        .help-card:nth-child(3) { border-top-color: var(--color-sand); }
+        .help-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .help-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .help-card p {
+            font-size: 14px;
+            color: var(--color-text-light);
+            line-height: 1.7;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+        .help-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        .help-card:nth-child(1) .help-btn {
+            background: var(--color-blue);
+            color: var(--color-white);
+            border-color: var(--color-blue);
+        }
+        .help-card:nth-child(1) .help-btn:hover {
+            background: var(--color-blue-dark);
+            border-color: var(--color-blue-dark);
+            transform: translateY(-2px);
+        }
+        .help-card:nth-child(2) .help-btn {
+            background: var(--color-green);
+            color: var(--color-dark-green);
+            border-color: var(--color-green);
+        }
+        .help-card:nth-child(2) .help-btn:hover {
+            background: var(--color-green-dark);
+            transform: translateY(-2px);
+        }
+        .help-card:nth-child(3) .help-btn {
+            background: var(--color-sand);
+            color: var(--color-dark-green);
+            border-color: var(--color-sand);
+        }
+        .help-card:nth-child(3) .help-btn:hover {
+            background: var(--color-sand-dark);
+            color: var(--color-white);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 991px) {
             .mission-grid,
             .stats-grid,
-            .team-grid { grid-template-columns: 1fr 1fr; }
+            .team-grid,
+            .stories-grid,
+            .help-grid { grid-template-columns: 1fr 1fr; }
             .timeline-horizontal { grid-template-columns: 1fr 1fr; gap: 40px; }
             .timeline-horizontal::before { display: none; }
+            .quote-text { font-size: 20px; }
+            .quote-box { padding: 48px 32px; }
         }
         @media (max-width: 767px) {
             .mission-grid,
             .stats-grid,
             .team-grid,
-            .timeline-horizontal { grid-template-columns: 1fr; }
+            .timeline-horizontal,
+            .stories-grid,
+            .work-grid,
+            .help-grid { grid-template-columns: 1fr; }
+            .quote-text { font-size: 17px; }
+            .quote-box { padding: 40px 24px; }
+            .quote-author { flex-direction: column; text-align: center; }
+            .quote-author-info { text-align: center; }
         }
     </style>
 </head>
@@ -344,22 +615,23 @@
         </div>
     </section>
 
+    <!-- 1. МИССИЯ -->
     <section class="section container">
-        <span class="eyebrow green">Наша миссия</span>
-        <h2 class="section-title">Что для нас важно</h2>
-        <p class="section-subtitle">Три главных принципа, на которых строится вся наша работа</p>
+        <span class="eyebrow green reveal">Наша миссия</span>
+        <h2 class="section-title reveal" data-delay="100">Что для нас важно</h2>
+        <p class="section-subtitle reveal" data-delay="200">Три главных принципа, на которых строится вся наша работа</p>
         <div class="mission-grid">
-            <div class="mission-card">
+            <div class="mission-card reveal" data-delay="300">
                 <div class="mission-icon blue"><i class="fa-solid fa-heart" aria-hidden="true"></i></div>
                 <h3>Забота</h3>
                 <p>Каждое животное получает внимание, ласку, правильное питание и медицинский уход. Мы относимся к ним как к членам семьи.</p>
             </div>
-            <div class="mission-card">
+            <div class="mission-card reveal" data-delay="500">
                 <div class="mission-icon green"><i class="fa-solid fa-shield-dog" aria-hidden="true"></i></div>
                 <h3>Здоровье</h3>
                 <p>Все питомцы проходят вакцинацию, стерилизацию, обработку от паразитов и регулярные осмотры у ветеринара.</p>
             </div>
-            <div class="mission-card">
+            <div class="mission-card reveal" data-delay="700">
                 <div class="mission-icon sand"><i class="fa-solid fa-house" aria-hidden="true"></i></div>
                 <h3>Дом навсегда</h3>
                 <p>Мы ищем ответственных хозяев, проверяем условия содержания и остаёмся на связи после передачи животного.</p>
@@ -367,13 +639,14 @@
         </div>
     </section>
 
+    <!-- 2. ИСТОРИЯ ПРИЮТА -->
     <section class="timeline-section">
         <div class="container">
-            <span class="eyebrow">Наша история</span>
-            <h2 class="section-title">Путь длиной в 5 лет</h2>
-            <p class="section-subtitle">От маленькой инициативы до крупного приюта, который спас сотни жизней</p>
+            <span class="eyebrow reveal">Наша история</span>
+            <h2 class="section-title reveal" data-delay="100">Путь длиной в 5 лет</h2>
+            <p class="section-subtitle reveal" data-delay="200">От маленькой инициативы до крупного приюта, который спас сотни жизней</p>
             <div class="timeline-horizontal">
-                <div class="timeline-card">
+                <div class="timeline-card reveal-zoom" data-delay="300">
                     <div class="timeline-year-big">2021</div>
                     <div class="timeline-dot"></div>
                     <div class="timeline-card-content">
@@ -381,7 +654,7 @@
                         <p>Пять волонтёров объединились, чтобы помочь бездомным животным.</p>
                     </div>
                 </div>
-                <div class="timeline-card">
+                <div class="timeline-card reveal-zoom" data-delay="500">
                     <div class="timeline-year-big">2022</div>
                     <div class="timeline-dot"></div>
                     <div class="timeline-card-content">
@@ -389,7 +662,7 @@
                         <p>Мы спасли 100 животных, нашли дом для 60 из них.</p>
                     </div>
                 </div>
-                <div class="timeline-card">
+                <div class="timeline-card reveal-zoom" data-delay="700">
                     <div class="timeline-year-big">2024</div>
                     <div class="timeline-dot"></div>
                     <div class="timeline-card-content">
@@ -397,7 +670,7 @@
                         <p>Переехали в просторное здание в Сыктывкаре.</p>
                     </div>
                 </div>
-                <div class="timeline-card">
+                <div class="timeline-card reveal-zoom" data-delay="900">
                     <div class="timeline-year-big">2026</div>
                     <div class="timeline-dot"></div>
                     <div class="timeline-card-content">
@@ -409,50 +682,157 @@
         </div>
     </section>
 
-    <section class="stats-section">
-        <div class="stats-bg">
-            <div class="container">
-                <span class="eyebrow">Цифры</span>
-                <h2 class="section-title">Наши результаты</h2>
-                <p class="section-subtitle">За пять лет работы мы многого добились вместе с вами</p>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="num">500+</div><div class="label">Спасённых животных</div></div>
-                    <div class="stat-card"><div class="num">124</div><div class="label">Нашли дом в 2026 году</div></div>
-                    <div class="stat-card"><div class="num">200+</div><div class="label">Питомцев сейчас в приюте</div></div>
-                    <div class="stat-card"><div class="num">50+</div><div class="label">Волонтёров и кураторов</div></div>
+    <!-- 3. ИХ СУДЬБЫ ИЗМЕНИЛИСЬ -->
+    <section class="stories-section">
+        <div class="container">
+            <span class="eyebrow reveal">Истории спасения</span>
+            <h2 class="section-title reveal" data-delay="100">Их судьбы изменились</h2>
+            <p class="section-subtitle reveal" data-delay="200">Три истории питомцев, которые нашли новый дом благодаря вам</p>
+            <div class="stories-grid">
+                <div class="story-card reveal" data-delay="300">
+                    <h4>Локи</h4>
+                    <div class="story-found">Найден на трассе зимой 2023</div>
+                    <p>Локи сняли с обочины — он был истощён и напуган. Волонтёры выходили его, сделали операцию на лапе. Сейчас Локи живёт в семье с детьми и обожает долгие прогулки в парке.</p>
+                </div>
+                <div class="story-card reveal" data-delay="500">
+                    <h4>Барсик</h4>
+                    <div class="story-found">Спасён из подвала 2024</div>
+                    <p>Барсика нашли в подвале многоэтажки — маленький, больной, с обмороженными лапами. После лечения он оказался невероятно ласковым котом. Сегодня Барсик живёт с пожилой парой и спит на подоконнике.</p>
+                </div>
+                <div class="story-card reveal" data-delay="700">
+                    <h4>Снежок</h4>
+                    <div class="story-found">Найден в коробке 2025</div>
+                    <p>Снежка подкинули в коробке к дверям приюта — ему было всего три недели. Волонтёры выкармливали его из бутылочки каждые два часа. Сейчас это активный и весёлый щенок, который ищет свою семью.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- 4. ЧЕМ ЗАНИМАЕТСЯ ПРИЮТ -->
+    <section class="work-section">
+        <div class="container">
+            <span class="eyebrow reveal">Наша работа</span>
+            <h2 class="section-title reveal" data-delay="100">Чем занимается приют</h2>
+            <p class="section-subtitle reveal" data-delay="200">Полный цикл помощи — от спасения до передачи в новую семью</p>
+            <div class="work-grid">
+                <div class="work-card reveal" data-delay="300">
+                    <div class="work-icon"><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i></div>
+                    <h3>Спасение и лечение</h3>
+                    <p>Забираем животных с улиц, из неблагополучных условий. Лечим травмы и болезни, проводим вакцинацию и стерилизацию.</p>
+                </div>
+                <div class="work-card reveal" data-delay="450">
+                    <div class="work-icon"><i class="fa-solid fa-house-chimney" aria-hidden="true"></i></div>
+                    <h3>Поиск нового дома</h3>
+                    <p>Публикуем анкеты питомцев, проводим собеседования с потенциальными хозяевами и организуем встречи.</p>
+                </div>
+                <div class="work-card reveal" data-delay="600">
+                    <div class="work-icon"><i class="fa-solid fa-book-open-reader" aria-hidden="true"></i></div>
+                    <h3>Просвещение</h3>
+                    <p>Рассказываем о правильном уходе за животными, проводим дни открытых дверей и работаем со школами.</p>
+                </div>
+                <div class="work-card reveal" data-delay="750">
+                    <div class="work-icon"><i class="fa-solid fa-heart-circle-check" aria-hidden="true"></i></div>
+                    <h3>Поддержка после усыновления</h3>
+                    <p>Остаёмся на связи с новыми хозяевами, помогаем советами и консультируем по вопросам здоровья питомца.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. НАШИ РЕЗУЛЬТАТЫ -->
+    <section class="stats-section">
+        <div class="stats-bg">
+            <div class="container">
+                <span class="eyebrow reveal">Цифры</span>
+                <h2 class="section-title reveal" data-delay="100">Наши результаты</h2>
+                <p class="section-subtitle reveal" data-delay="200">За пять лет работы мы многого добились вместе с вами</p>
+                <div class="stats-grid">
+                    <div class="stat-card reveal-zoom" data-delay="300"><div class="num">500+</div><div class="label">Спасённых животных</div></div>
+                    <div class="stat-card reveal-zoom" data-delay="450"><div class="num">124</div><div class="label">Нашли дом в 2026 году</div></div>
+                    <div class="stat-card reveal-zoom" data-delay="600"><div class="num">200+</div><div class="label">Питомцев сейчас в приюте</div></div>
+                    <div class="stat-card reveal-zoom" data-delay="750"><div class="num">50+</div><div class="label">Волонтёров и кураторов</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. ЦИТАТА АННЫ -->
+    <section class="quote-section">
+        <div class="container">
+            <div class="quote-box reveal-zoom">
+                <div class="quote-text">«Каждое спасённое животное — это не просто цифра. Это чья-то жизнь, которую мы вместе с вами подарили заново. И я верю, что добро возвращается.»</div>
+                <div class="quote-author">
+                    <div class="quote-avatar">АК</div>
+                    <div class="quote-author-info">
+                        <strong>Анна Ковалёва</strong>
+                        <span>Основатель приюта «Лапа помощи»</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. НАША КОМАНДА -->
     <section class="section container">
-        <span class="eyebrow">Наша команда</span>
-        <h2 class="section-title">Люди, которые помогают</h2>
-        <p class="section-subtitle">Волонтёры, ветеринары и кураторы — те, кто каждый день рядом с животными</p>
+        <span class="eyebrow reveal">Наша команда</span>
+        <h2 class="section-title reveal" data-delay="100">Люди, которые помогают</h2>
+        <p class="section-subtitle reveal" data-delay="200">Волонтёры, ветеринары и кураторы — те, кто каждый день рядом с животными</p>
         <div class="team-grid">
-            <div class="team-card">
+            <div class="team-card reveal" data-delay="300">
                 <div class="team-avatar">АК</div>
                 <h4>Анна Ковалёва</h4>
                 <div class="team-role">Основатель</div>
                 <p>Создала приют в 2021 году, курирует все ключевые направления</p>
             </div>
-            <div class="team-card">
+            <div class="team-card reveal" data-delay="450">
                 <div class="team-avatar">ДЛ</div>
                 <h4>Дмитрий Лебедев</h4>
                 <div class="team-role">Ветеринар</div>
                 <p>Проводит осмотры, операции и вакцинацию</p>
             </div>
-            <div class="team-card">
+            <div class="team-card reveal" data-delay="600">
                 <div class="team-avatar">МП</div>
                 <h4>Мария Петрова</h4>
                 <div class="team-role">Куратор усыновления</div>
                 <p>Общается с потенциальными хозяевами</p>
             </div>
-            <div class="team-card">
+            <div class="team-card reveal" data-delay="750">
                 <div class="team-avatar">СИ</div>
                 <h4>Сергей Иванов</h4>
                 <div class="team-role">Волонтёр</div>
                 <p>Помогает с выгулом, кормлением и уборкой</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. КАК ПОМОЧЬ ПРИЮТУ -->
+    <section class="help-section">
+        <div class="container">
+            <span class="eyebrow reveal">Присоединяйтесь</span>
+            <h2 class="section-title reveal" data-delay="100">Как помочь приюту</h2>
+            <p class="section-subtitle reveal" data-delay="200">Три простых способа сделать доброе дело прямо сейчас</p>
+            <div class="help-grid">
+                <div class="help-card reveal" data-delay="300">
+                    <h3>Пожертвовать</h3>
+                    <p>Любая сумма поможет нам кормить, лечить и содержать животных. Даже 100 рублей — это корм для одного питомца на день.</p>
+                    <a href="donate.html" class="help-btn">
+                        Поддержать <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="help-card reveal" data-delay="450">
+                    <h3>Стать волонтёром</h3>
+                    <p>Помогайте с выгулом, уборкой, фотосессиями для питомцев или транспортировкой. Мы рады любой помощи.</p>
+                    <a href="contacts.html" class="help-btn">
+                        Написать нам <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="help-card reveal" data-delay="600">
+                    <h3>Забрать питомца</h3>
+                    <p>Подарите дом тому, кто его ждёт. В нашем каталоге более 200 собак и кошек, готовых к переезду.</p>
+                    <a href="catalog.html" class="help-btn">
+                        Каталог <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -470,35 +850,33 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        /*
-         * Возвращает массив id избранных животных из localStorage.
-         * Если данных нет или JSON повреждён — возвращает пустой массив,
-         * чтобы дальнейший код не падал на парсинге.
-         */
-        function getFavorites() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.reveal, .reveal-zoom');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(el => observer.observe(el));
+
             try {
                 const fav = localStorage.getItem('lapa_favorites');
-                return fav ? JSON.parse(fav) : [];
-            } catch (e) {
-                return [];
-            }
-        }
-
-        /*
-         * Обновляет счётчик избранного в шапке сайта.
-         * Класс visible добавляется только при count > 0 — так счётчик
-         * не отображается, если избранное пустое.
-         */
-        function updateFavCounter() {
-            const counter = document.getElementById('favCounter');
-            if (!counter) return;
-            const count = getFavorites().length;
-            counter.textContent = count;
-            counter.classList.toggle('visible', count > 0);
-        }
-
-        /* Счётчик обновляется один раз при загрузке страницы */
-        document.addEventListener('DOMContentLoaded', updateFavCounter);
+                const favs = fav ? JSON.parse(fav) : [];
+                const counter = document.getElementById('favCounter');
+                if (counter) {
+                    counter.textContent = favs.length;
+                    counter.classList.toggle('visible', favs.length > 0);
+                }
+            } catch (e) {}
+        });
     </script>
 </body>
 </html>
