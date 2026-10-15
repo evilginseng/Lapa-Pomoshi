@@ -11,10 +11,40 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /*
-         * Сетка карточек с контактами: адрес, телефон, email.
-         * Три колонки на десктопе, одна — на планшете и телефоне.
-         */
+        /* ============================================================
+           АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+           ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-zoom.visible { opacity: 1; transform: scale(1); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal-zoom {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Мобильный пункт «Кабинет» — скрыт на ПК */
+        @media (min-width: 992px) {
+            .nav-item-mobile-account { display: none !important; }
+        }
+
+        /* ============================================================
+           КОНТАКТНЫЕ КАРТОЧКИ
+           ============================================================ */
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -31,12 +61,10 @@
             border: 2px solid transparent;
         }
         .contact-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-        /* У каждой карточки свой цвет рамки при наведении */
         .contact-card:nth-child(1):hover { border-color: var(--color-blue); }
         .contact-card:nth-child(2):hover { border-color: var(--color-green); }
         .contact-card:nth-child(3):hover { border-color: var(--color-sand); }
 
-        /* Квадратная иконка внутри карточки, три цветовых варианта */
         .contact-icon {
             width: 72px;
             height: 72px;
@@ -56,10 +84,9 @@
         .contact-card a  { color: var(--color-blue-dark); font-weight: 600; }
         .contact-card a:hover { color: var(--color-dark-green); }
 
-        /*
-         * Обёртка вокруг карты: фиксированная высота, скруглённые углы.
-         * Внутри — iframe с OpenStreetMap.
-         */
+        /* ============================================================
+           КАРТА
+           ============================================================ */
         .map-wrapper {
             border-radius: var(--radius-lg);
             overflow: hidden;
@@ -72,7 +99,6 @@
         }
         .map-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* Плашка с адресом поверх карты, слева вверху */
         .map-badge {
             position: absolute;
             top: 20px; left: 20px;
@@ -102,7 +128,9 @@
         .map-badge-text h4 { font-size: 15px; margin-bottom: 2px; font-family: var(--font-body); font-weight: 600; }
         .map-badge-text p  { font-size: 12px; color: var(--color-muted); margin: 0; }
 
-        /* ---------- Форма обратной связи ---------- */
+        /* ============================================================
+           ФОРМА
+           ============================================================ */
         .form-section {
             background: var(--color-white);
             border-radius: var(--radius-lg);
@@ -112,7 +140,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* Декоративная полоса сверху с градиентом из четырёх цветов сайта */
         .form-section::before {
             content: '';
             position: absolute;
@@ -132,7 +159,6 @@
             margin-bottom: 32px;
         }
 
-        /* Поля формы — единый стиль для input и textarea */
         .form-group { margin-bottom: 20px; }
         .form-label {
             display: block;
@@ -165,7 +191,6 @@
         }
         .form-textarea { resize: vertical; min-height: 140px; }
 
-        /* Две колонки для полей имя и email */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -196,11 +221,6 @@
             box-shadow: var(--shadow-blue);
         }
 
-        /*
-         * Адаптив.
-         * Планшет (до 991px) — карточки в одну колонку, форма сужается.
-         * Телефон (до 767px) — карта становится ниже.
-         */
         @media (max-width: 991px) {
             .contact-grid { grid-template-columns: 1fr; }
             .form-section { padding: 32px 24px; }
@@ -230,6 +250,13 @@
                     <li class="nav-item"><a class="nav-link-custom" href="about.html">О приюте</a></li>
                     <li class="nav-item"><a class="nav-link-custom active" href="contacts.html">Контакты</a></li>
                     <li class="nav-item"><a class="nav-link-custom" href="donate.html">Помощь</a></li>
+                    <!-- Мобильный пункт «Кабинет» — виден только на телефоне и планшете -->
+                    <li class="nav-item nav-item-mobile-account">
+                        <a class="nav-link-custom" href="account.html">
+                            <i class="fa-regular fa-user me-2" aria-hidden="true"></i>Кабинет
+                            <span class="fav-counter" id="favCounterMobile" style="position: static; margin-left: 6px; display: none;"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <a class="btn-login d-none d-lg-inline-flex" href="account.html">
@@ -248,21 +275,22 @@
     </section>
 
     <section class="container" style="padding-bottom: 40px;">
+
         <!-- Три карточки: адрес, телефон, email -->
         <div class="contact-grid">
-            <div class="contact-card">
+            <div class="contact-card reveal">
                 <div class="contact-icon blue"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></div>
                 <h4>Адрес приюта</h4>
                 <p>г. Сыктывкар,<br>ул. Коммунистическая, д. 25</p>
                 <p style="font-size: 13px; margin-top: 12px;">Ежедневно с 10:00 до 19:00</p>
             </div>
-            <div class="contact-card">
+            <div class="contact-card reveal">
                 <div class="contact-icon green"><i class="fa-solid fa-phone" aria-hidden="true"></i></div>
                 <h4>Телефон</h4>
                 <p><a href="tel:+8212123456">+8 (212) 123-45-67</a></p>
                 <p style="font-size: 13px; margin-top: 12px;">Звонки принимаем с 9:00 до 21:00</p>
             </div>
-            <div class="contact-card">
+            <div class="contact-card reveal">
                 <div class="contact-icon sand"><i class="fa-solid fa-envelope" aria-hidden="true"></i></div>
                 <h4>Email</h4>
                 <p><a href="mailto:help@lapapomoshi.ru">help@lapapomoshi.ru</a></p>
@@ -270,8 +298,8 @@
             </div>
         </div>
 
-        <!-- Карта с плашкой адреса -->
-        <div class="map-wrapper">
+        <!-- Карта -->
+        <div class="map-wrapper reveal-zoom">
             <div class="map-badge">
                 <div class="map-badge-icon"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i></div>
                 <div class="map-badge-text">
@@ -282,8 +310,8 @@
             <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=50.7800%2C61.6600%2C50.8600%2C61.6900&layer=mapnik&marker=61.6688%2C50.8364" loading="lazy" allowfullscreen title="Карта приюта в Сыктывкаре"></iframe>
         </div>
 
-        <!-- Форма обратной связи -->
-        <div class="form-section">
+        <!-- Форма -->
+        <div class="form-section reveal">
             <h2>Напишите нам</h2>
             <p class="form-subtitle">Оставьте сообщение — мы ответим в ближайшее время</p>
 
@@ -327,14 +355,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        /* Базовый адрес API. При деплое заменить на публичный URL бэкенда */
         const API_URL = 'https://lapa-pomoshi-12sn.onrender.com';
 
-        /*
-         * Возвращает массив id избранных животных из localStorage.
-         * При повреждённом JSON возвращает пустой массив,
-         * чтобы код не падал на парсинге.
-         */
         function getFavorites() {
             try {
                 return JSON.parse(localStorage.getItem('lapa_favorites') || '[]');
@@ -343,24 +365,31 @@
             }
         }
 
-        /*
-         * Обновляет счётчик избранного в шапке сайта.
-         * Класс visible добавляется только при count > 0 — так счётчик
-         * не отображается, если избранное пустое.
-         */
         function updateFavCounter() {
-            const counter = document.getElementById('favCounter');
-            if (!counter) return;
             const count = getFavorites().length;
-            counter.textContent = count;
-            counter.classList.toggle('visible', count > 0);
+
+            const counter = document.getElementById('favCounter');
+            if (counter) {
+                counter.textContent = count;
+                counter.classList.toggle('visible', count > 0);
+            }
+
+            const mobileCounter = document.getElementById('favCounterMobile');
+            if (mobileCounter) {
+                mobileCounter.textContent = count;
+                mobileCounter.style.display = count > 0 ? 'inline-flex' : 'none';
+                mobileCounter.style.alignItems = 'center';
+                mobileCounter.style.justifyContent = 'center';
+                mobileCounter.style.width = '18px';
+                mobileCounter.style.height = '18px';
+                mobileCounter.style.borderRadius = '50%';
+                mobileCounter.style.background = '#E85A5A';
+                mobileCounter.style.color = '#fff';
+                mobileCounter.style.fontSize = '10px';
+                mobileCounter.style.fontWeight = '700';
+            }
         }
 
-        /*
-         * Всплывающее уведомление в углу экрана.
-         * Перекрывает предыдущее, если оно ещё не исчезло.
-         * type: success / error / info — задаёт иконку и цвет.
-         */
         function showToast(text, type = 'success') {
             const old = document.querySelector('.toast-notification');
             if (old) old.remove();
@@ -381,11 +410,6 @@
             }, 2800);
         }
 
-        /*
-         * Отправляет сообщение с формы обратной связи.
-         * Проверяет обязательные поля, отправляет POST на /api/contacts.
-         * При успехе — очищает поля формы и показывает уведомление.
-         */
         async function sendMessage() {
             const name    = document.getElementById('contactName').value.trim();
             const email   = document.getElementById('contactEmail').value.trim();
@@ -418,8 +442,29 @@
             }
         }
 
-        /* Счётчик избранного обновляется один раз при загрузке страницы */
-        document.addEventListener('DOMContentLoaded', updateFavCounter);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFavCounter();
+
+            const elements = document.querySelectorAll('.reveal, .reveal-zoom');
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(el => observer.observe(el));
+        });
     </script>
 </body>
 </html>
