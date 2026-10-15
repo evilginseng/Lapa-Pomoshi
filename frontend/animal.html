@@ -20,25 +20,21 @@
             box-shadow: var(--shadow-lg);
             max-width: 1180px;
             margin: 0 auto;
-            padding: 28px;
+            padding: 32px;
+            text-align: left;
         }
 
         /* ============================================================
-           ВЕРХНИЙ БЛОК: фото слева, мета + теги справа
+           ФОТО — обтекается текстом (float: left)
            ============================================================ */
-        .animal-top {
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            gap: 32px;
-            align-items: start;
-            margin-bottom: 28px;
-        }
-
         .animal-swiper-wrap {
+            float: left;
+            width: 46%;
+            height: 480px;
             border-radius: var(--radius-md);
             overflow: hidden;
-            height: 480px;
             box-shadow: var(--shadow-md);
+            margin: 0 28px 20px 0;
         }
         .animal-swiper {
             width: 100%;
@@ -92,7 +88,7 @@
             .animal-swiper .swiper-button-prev { display: none; }
         }
 
-        .animal-swiper .swiper-pagination { bottom: 12px !important; }
+        .animal-swiper .swiper-pagination { bottom: 14px !important; }
         .animal-swiper .swiper-pagination-bullet {
             width: 7px;
             height: 7px;
@@ -118,117 +114,111 @@
         }
 
         /* ============================================================
-           ПРАВАЯ КОЛОНКА: заголовок, мета, теги
+           ТЕКСТ — ОБТЕКАЕТ ФОТО СЛЕВА
            ============================================================ */
-        .animal-info { text-align: left; }
-
-        .animal-info h1 { font-size: 32px; margin-bottom: 12px; }
+        .animal-info h1 { font-size: 38px; margin-bottom: 14px; }
 
         .animal-meta {
             display: flex;
-            gap: 16px;
+            gap: 18px;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            font-size: 15px;
+            font-size: 16px;
             color: var(--color-text-light);
         }
-        .animal-meta span { display: flex; align-items: center; gap: 7px; }
-        .animal-meta i { color: var(--color-blue); font-size: 15px; }
+        .animal-meta span { display: flex; align-items: center; gap: 8px; }
+        .animal-meta i { color: var(--color-blue); font-size: 16px; }
 
         .block-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.4px;
+            letter-spacing: 1.5px;
             color: var(--color-muted);
             margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
         }
-        .block-title i { color: var(--color-blue); font-size: 13px; }
+        .block-title i { color: var(--color-blue); font-size: 14px; }
 
-        /* ТЕГИ — шире, крупнее паддинг */
-        .health-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+        .health-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .health-tag {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 8px 16px;
+            gap: 8px;
+            padding: 10px 18px;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
         }
         .health-tag.yes { background: var(--color-green-light); color: var(--color-dark-green); }
         .health-tag.no  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
-        .health-tag i   { font-size: 12px; }
+        .health-tag i   { font-size: 13px; }
 
-        .animal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+        .animal-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .animal-tags .pet-tag { font-size: 15px; padding: 9px 18px; }
 
-        .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+        .skills-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
         .skill-tag {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 8px 16px;
+            gap: 8px;
+            padding: 10px 18px;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
         }
         .skill-tag.yes { background: var(--color-blue-light); color: var(--color-blue-dark); }
         .skill-tag.no  { background: var(--color-sand-light); color: var(--color-sand-dark); }
-        .skill-tag i   { font-size: 12px; }
+        .skill-tag i   { font-size: 13px; }
 
-        /* ============================================================
-           НИЖНИЙ БЛОК: медицинские заметки, описание, кнопки на всю ширину
-           ============================================================ */
-        .animal-bottom {
-            border-top: 1px solid var(--color-border-light);
-            padding-top: 24px;
-        }
-
+        /* ТЕКСТ — обтекает фото */
         .medical-notes {
-            font-size: 15px;
+            font-size: 16.5px;
             color: var(--color-text-light);
-            line-height: 1.7;
-            margin-bottom: 20px;
+            line-height: 1.75;
+            margin-bottom: 24px;
         }
 
         .animal-desc {
-            font-size: 15px;
+            font-size: 16.5px;
             color: var(--color-text-light);
-            line-height: 1.7;
+            line-height: 1.75;
             margin-bottom: 24px;
             white-space: pre-line;
         }
 
+        /* Кнопки — очищают обтекание и растягиваются */
         .animal-actions {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            padding-top: 20px;
+            padding-top: 22px;
             border-top: 1px solid var(--color-border-light);
+            clear: both;
+            margin-top: 8px;
         }
         .animal-actions .btn-primary-custom,
         .animal-actions .btn-outline-custom {
-            padding: 13px 28px;
+            padding: 14px 28px;
             font-size: 15px;
         }
 
         /* ============================================================
            Адаптив
            ============================================================ */
-        @media (max-width: 991px) {
-            .animal-top {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            .animal-swiper-wrap { height: 400px; }
-            .animal-info h1 { font-size: 28px; }
-        }
         @media (max-width: 767px) {
             .animal-card { padding: 20px; }
-            .animal-swiper-wrap { height: 320px; }
+            .animal-swiper-wrap {
+                float: none;
+                width: 100%;
+                height: 340px;
+                margin: 0 0 24px 0;
+            }
+            .animal-info h1 { font-size: 28px; }
+            .medical-notes,
+            .animal-desc { font-size: 15.5px; }
         }
     </style>
 </head>
@@ -270,36 +260,28 @@
     <section class="animal-detail container">
         <div class="animal-card">
 
-            <!-- ВЕРХНИЙ БЛОК: фото + мета/теги -->
-            <div class="animal-top">
-
-                <div class="animal-swiper-wrap">
-                    <div class="swiper animal-swiper" id="animalSwiper">
-                        <div class="swiper-wrapper" id="swiperWrapper"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-pagination"></div>
-                    </div>
+            <!-- ФОТО — плавает слева, текст обтекает -->
+            <div class="animal-swiper-wrap">
+                <div class="swiper animal-swiper" id="animalSwiper">
+                    <div class="swiper-wrapper" id="swiperWrapper"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
                 </div>
-
-                <div class="animal-info">
-
-                    <div class="animal-meta" id="animalMeta"></div>
-
-                    <div class="block-title"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Здоровье</div>
-                    <div class="health-tags" id="healthTags"></div>
-
-                    <div class="animal-tags" id="animalTags"></div>
-
-                    <div class="block-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Навыки</div>
-                    <div class="skills-tags" id="skillsTags"></div>
-
-                </div>
-
             </div>
 
-            <!-- НИЖНИЙ БЛОК: описание на всю ширину -->
-            <div class="animal-bottom">
+            <!-- ТЕКСТ — обтекает фото справа и снизу -->
+            <div class="animal-info">
+
+                <div class="animal-meta" id="animalMeta"></div>
+
+                <div class="block-title"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Здоровье</div>
+                <div class="health-tags" id="healthTags"></div>
+
+                <div class="animal-tags" id="animalTags"></div>
+
+                <div class="block-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Навыки</div>
+                <div class="skills-tags" id="skillsTags"></div>
 
                 <div id="medicalBlock" style="display: none;">
                     <div class="block-title"><i class="fa-solid fa-notes-medical" aria-hidden="true"></i> Медицинские заметки</div>
@@ -309,15 +291,16 @@
                 <div class="block-title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Характер и история</div>
                 <p class="animal-desc" id="animalDesc"></p>
 
-                <div class="animal-actions">
-                    <button class="btn-primary-custom" onclick="openAdoptModal()">
-                        <i class="fa-solid fa-paw" aria-hidden="true"></i> Забрать домой
-                    </button>
-                    <a href="catalog.html" class="btn-outline-custom">
-                        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> В каталог
-                    </a>
-                </div>
+            </div>
 
+            <!-- КНОПКИ — на всю ширину внизу -->
+            <div class="animal-actions">
+                <button class="btn-primary-custom" onclick="openAdoptModal()">
+                    <i class="fa-solid fa-paw" aria-hidden="true"></i> Забрать домой
+                </button>
+                <a href="catalog.html" class="btn-outline-custom">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> В каталог
+                </a>
             </div>
 
         </div>
