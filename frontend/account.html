@@ -11,18 +11,27 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
+        .account-section { padding: 30px 0 80px; }
+
+        .account-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 32px;
+            max-width: 1180px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        /* ---------- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ ---------- */
         .profile-card {
             background: var(--color-white);
             border-radius: var(--radius-lg);
-            padding: 40px;
+            padding: 36px 28px;
             box-shadow: var(--shadow-md);
-            margin-bottom: 48px;
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            text-align: left;
+            text-align: center;
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--color-border-light);
         }
         .profile-card::before {
             content: '';
@@ -35,126 +44,277 @@
                 var(--color-sand) 66%,
                 var(--color-dark-green) 100%);
         }
+
         .profile-avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: var(--color-sand);
+            background: var(--color-sand-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 42px;
             color: var(--color-dark-green);
-            flex-shrink: 0;
+            margin: 0 auto 20px;
             border: 4px solid var(--color-white);
             box-shadow: var(--shadow-md);
         }
-        .profile-info h3 { font-size: 26px; margin-bottom: 6px; }
-        .profile-info p  { font-size: 14px; color: var(--color-muted); margin-bottom: 4px; }
 
-        .profile-stats { display: flex; gap: 32px; margin-left: auto; }
-        .profile-stat .num {
+        .profile-name {
             font-family: var(--font-heading);
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 24px;
             color: var(--color-dark-green);
-            line-height: 1;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
-        .profile-stat .lbl {
-            font-size: 11px;
-            color: var(--color-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 6px;
+
+        .profile-email {
+            font-size: 13.5px;
+            color: var(--color-text-light);
+            margin-bottom: 24px;
+            word-break: break-all;
+        }
+
+        .profile-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 18px 0;
+            border-top: 1px solid var(--color-border-light);
+            border-bottom: 1px solid var(--color-border-light);
+            margin-bottom: 20px;
+        }
+        .profile-stat {
+            font-size: 14px;
+            color: var(--color-text-light);
+            text-align: center;
+        }
+        .profile-stat strong {
+            color: var(--color-dark-green);
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        .btn-logout {
+            background: var(--color-sand-light);
+            color: var(--color-dark-green);
+            border: none;
+            padding: 11px 24px;
+            border-radius: 50px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .btn-logout:hover {
+            background: var(--color-red);
+            color: var(--color-white);
+        }
+
+        /* ---------- ПРАВАЯ ЧАСТЬ — ВКЛАДКИ ---------- */
+        .tabs-wrapper {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border-light);
+            margin-bottom: 24px;
         }
 
         .tabs-custom {
             display: flex;
-            justify-content: center;
             gap: 8px;
-            margin-bottom: 40px;
             flex-wrap: wrap;
         }
         .tab-btn {
-            padding: 12px 28px;
+            flex: 1;
+            padding: 12px 24px;
             border-radius: 50px;
-            border: 1.5px solid var(--color-border);
-            background: var(--color-white);
+            border: none;
+            background: transparent;
             font-family: var(--font-body);
             font-weight: 600;
-            font-size: 14px;
+            font-size: 14.5px;
             color: var(--color-text-light);
             cursor: pointer;
             transition: var(--transition);
+            text-align: center;
         }
-        .tab-btn:hover { border-color: var(--color-blue); color: var(--color-blue-dark); }
+        .tab-btn:hover { color: var(--color-dark-green); }
         .tab-btn.active {
-            background: var(--color-blue);
-            border-color: var(--color-blue);
-            color: var(--color-white);
+            background: var(--color-sand-light);
+            color: var(--color-dark-green);
+            font-weight: 700;
         }
 
         .tab-content-custom { display: none; }
         .tab-content-custom.active { display: block; }
 
+        /* Пустое состояние */
+        .empty-box {
+            background: var(--color-white);
+            border-radius: var(--radius-lg);
+            padding: 60px 30px;
+            text-align: center;
+            border: 1px solid var(--color-border-light);
+            box-shadow: var(--shadow-sm);
+        }
+        .empty-box-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--color-blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            color: var(--color-blue-dark);
+        }
+        .empty-box p {
+            font-size: 14.5px;
+            color: var(--color-text-light);
+            margin-bottom: 20px;
+        }
+        .btn-empty {
+            background: var(--color-sand-light);
+            color: var(--color-dark-green);
+            border: none;
+            padding: 11px 28px;
+            border-radius: 50px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-empty:hover {
+            background: var(--color-blue);
+            color: var(--color-white);
+        }
+
+        /* Карточка заявки */
         .application-card {
             background: var(--color-white);
             border-radius: var(--radius-md);
-            padding: 24px;
+            padding: 22px 26px;
             box-shadow: var(--shadow-sm);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
             text-align: left;
             border: 1px solid var(--color-border-light);
+            transition: var(--transition);
+        }
+        .application-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
         .application-info { flex-grow: 1; }
-        .application-info h4 { font-size: 18px; margin-bottom: 4px; }
+        .application-info h4 { font-size: 17px; margin-bottom: 4px; }
         .application-info p  { font-size: 13px; color: var(--color-muted); margin: 0; }
 
         .status-badge {
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 50px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
         }
         .status-new       { background: var(--color-blue-light);  color: var(--color-blue-dark); }
-        .status-pending   { background: rgba(240, 180, 60, 0.18); color: #b07a00; }
+        .status-pending   { background: var(--color-sand-light);  color: var(--color-sand-dark); }
         .status-approved  { background: var(--color-green-light); color: var(--color-dark-green); }
         .status-rejected  { background: rgba(232, 90, 90, 0.15);  color: var(--color-red); }
 
-        .empty-state { padding: 80px 20px; text-align: center; }
-        .empty-state-icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+        /* Карточка избранного */
+        .fav-card {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border-light);
+            transition: var(--transition);
+            text-align: left;
+        }
+        .fav-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        .fav-card-img {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
             background: var(--color-bg-alt);
+        }
+        .fav-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .fav-remove {
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            cursor: pointer;
+            color: var(--color-red);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 24px;
-            font-size: 40px;
-            color: var(--color-muted);
-        }
-        .empty-state h3 { font-size: 26px; margin-bottom: 12px; }
-        .empty-state p {
             font-size: 15px;
-            color: var(--color-muted);
-            max-width: 400px;
-            margin: 0 auto 28px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
         }
+        .fav-remove:hover {
+            background: var(--color-red);
+            color: var(--color-white);
+        }
+        .fav-info { padding: 18px 20px; }
+        .fav-info h4 { font-size: 18px; margin-bottom: 4px; }
+        .fav-meta {
+            font-size: 12.5px;
+            color: var(--color-muted);
+            margin-bottom: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .fav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--color-dark-green);
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .fav-link:hover { color: var(--color-blue-dark); }
 
+        /* ---------- АДАПТИВ ---------- */
         @media (max-width: 991px) {
-            .profile-card { flex-direction: column; text-align: center; }
-            .profile-stats { margin-left: 0; }
+            .account-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .profile-card { padding: 28px 22px; }
+            .profile-stats { flex-direction: row; justify-content: center; gap: 24px; }
         }
         @media (max-width: 767px) {
-            .profile-card { padding: 24px; }
-            .profile-stats { gap: 20px; }
-            .application-card { flex-direction: column; text-align: center; }
+            .account-section { padding: 20px 0 60px; }
+            .application-card { flex-direction: column; align-items: flex-start; gap: 12px; }
         }
     </style>
 </head>
@@ -170,66 +330,71 @@
                 <a class="btn-login" href="index.html">
                     <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> На главную
                 </a>
-                <button class="btn-login" style="background: var(--color-red);" onclick="userLogout()">
-                    <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Выйти
-                </button>
             </div>
         </div>
     </nav>
 
-    <section class="page-header-gradient" style="padding: 60px 0 40px;">
-        <div class="container">
+    <section class="page-header-gradient" style="padding: 50px 0 30px;">
+        <div class="container text-center">
             <span class="eyebrow">Личный кабинет</span>
             <h1 class="page-title">Мой профиль</h1>
             <p class="page-subtitle">Здесь собраны ваши избранные животные и заявки на усыновление</p>
         </div>
     </section>
 
-    <section class="container" style="padding-bottom: 60px;">
-        <div class="profile-card">
-            <div class="profile-avatar"><i class="fa-solid fa-user" aria-hidden="true"></i></div>
-            <div class="profile-info">
-                <h3 id="profileName">Гость</h3>
-                <p id="profileEmail"><i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>guest@lapapomoshi.ru</p>
-                <p id="profilePhone"><i class="fa-solid fa-phone me-2" aria-hidden="true"></i>+7 (999) 000-00-00</p>
-            </div>
-            <div class="profile-stats">
-                <div class="profile-stat"><div class="num" id="favCount">0</div><div class="lbl">В избранном</div></div>
-                <div class="profile-stat"><div class="num" id="appCount">0</div><div class="lbl">Заявок</div></div>
-            </div>
-        </div>
+    <section class="account-section container">
+        <div class="account-grid">
 
-        <div class="tabs-custom">
-            <button class="tab-btn active" onclick="switchTab('favorites', this)">
-                <i class="fa-solid fa-heart me-2" aria-hidden="true"></i>Избранное
-            </button>
-            <button class="tab-btn" onclick="switchTab('applications', this)">
-                <i class="fa-solid fa-file-lines me-2" aria-hidden="true"></i>Мои заявки
-            </button>
-        </div>
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i>
+                </div>
+                <div class="profile-name" id="profileName">Елена</div>
+                <div class="profile-email" id="profileEmail">elena345@gmail.com</div>
 
-        <div class="tab-content-custom active" id="tab-favorites">
-            <div class="row g-4" id="favoritesGrid"></div>
-            <div id="favoritesEmpty" class="empty-state" style="display: none;">
-                <div class="empty-state-icon"><i class="fa-regular fa-heart" aria-hidden="true"></i></div>
-                <h3>В избранном пока пусто</h3>
-                <p>Добавляйте понравившихся животных с помощью иконки сердца на карточке</p>
-                <a href="catalog.html" class="btn-primary-custom">
-                    <i class="fa-solid fa-paw" aria-hidden="true"></i> Перейти в каталог
-                </a>
-            </div>
-        </div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><strong id="favCount">0</strong> избранных</div>
+                    <div class="profile-stat"><strong id="appCount">0</strong> заявок</div>
+                </div>
 
-        <div class="tab-content-custom" id="tab-applications">
-            <div id="applicationsList"></div>
-            <div id="applicationsEmpty" class="empty-state">
-                <div class="empty-state-icon"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></div>
-                <h3>Заявок пока нет</h3>
-                <p>Когда вы подадите заявку на усыновление, она появится здесь</p>
-                <a href="catalog.html" class="btn-primary-custom">
-                    <i class="fa-solid fa-paw" aria-hidden="true"></i> Найти питомца
-                </a>
+                <button class="btn-logout" onclick="userLogout()">
+                    <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Выйти
+                </button>
             </div>
+
+            <div>
+
+                <div class="tabs-wrapper">
+                    <div class="tabs-custom">
+                        <button class="tab-btn active" onclick="switchTab('favorites', this)">Избранное</button>
+                        <button class="tab-btn" onclick="switchTab('applications', this)">Мои заявки</button>
+                    </div>
+                </div>
+
+                <div class="tab-content-custom active" id="tab-favorites">
+                    <div class="row g-4" id="favoritesGrid"></div>
+                    <div id="favoritesEmpty" class="empty-box" style="display: none;">
+                        <div class="empty-box-icon"><i class="fa-regular fa-heart" aria-hidden="true"></i></div>
+                        <p>Пока нет избранных животных</p>
+                        <a href="catalog.html" class="btn-empty">
+                            <i class="fa-solid fa-paw" aria-hidden="true"></i> Перейти в каталог
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tab-content-custom" id="tab-applications">
+                    <div id="applicationsList"></div>
+                    <div id="applicationsEmpty" class="empty-box">
+                        <div class="empty-box-icon"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></div>
+                        <p>Вы ещё не подавали заявок</p>
+                        <a href="catalog.html" class="btn-empty">
+                            <i class="fa-solid fa-paw" aria-hidden="true"></i> Найти питомца
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </section>
 
@@ -312,12 +477,10 @@
 
             if (favs.length === 0) {
                 grid.innerHTML = '';
-                grid.style.display = 'none';
                 empty.style.display = 'block';
                 return;
             }
 
-            grid.style.display = 'flex';
             empty.style.display = 'none';
             grid.innerHTML = '';
 
@@ -326,34 +489,27 @@
                 const allPets = await res.json();
                 const favPets = allPets.filter(p => favs.includes(p.id));
 
-                const tagColors = ['blue', 'green', 'sand'];
-
-                favPets.forEach((pet, idx) => {
-                    const tags = pet.tags || [];
-                    const tagsHtml = tags
-                        .map((t, i) => `<span class="pet-tag ${tagColors[(idx + i) % 3]}">${t}</span>`)
-                        .join('');
-
+                favPets.forEach((pet) => {
                     const petPhoto = (pet.images && pet.images[0]) || pet.img;
 
                     grid.innerHTML += `
-                        <div class="col-xl-3 col-lg-4 col-md-6">
-                            <div class="pet-card-custom">
-                                <div class="pet-image-wrapper">
-                                    <button class="pet-fav-btn active" onclick="removeFavorite(${pet.id})" title="Удалить из избранного">
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <div class="fav-card">
+                                <div class="fav-card-img">
+                                    <img src="${petPhoto}" alt="${pet.name}"
+                                         onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
+                                    <button class="fav-remove" onclick="removeFavorite(${pet.id})" title="Удалить из избранного">
                                         <i class="fa-solid fa-heart" aria-hidden="true"></i>
                                     </button>
-                                    <img src="${petPhoto}" alt="${pet.name}" onerror="this.src='https://via.placeholder.com/400x280/F7F4F0/9A9A9A?text=Нет+фото'">
                                 </div>
-                                <div class="pet-info-custom">
-                                    <div class="pet-meta">
+                                <div class="fav-info">
+                                    <h4>${pet.name}</h4>
+                                    <div class="fav-meta">
                                         <span>${pet.species}</span>
-                                        <span class="dot"></span>
+                                        <span>·</span>
                                         <span>${getAgeText(pet.age)}</span>
                                     </div>
-                                    <h3>${pet.name}</h3>
-                                    <div class="pet-tags">${tagsHtml}</div>
-                                    <a href="animal.html?id=${pet.id}" class="btn-pet">
+                                    <a href="animal.html?id=${pet.id}" class="fav-link">
                                         Подробнее <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
@@ -397,30 +553,18 @@
                     let statusClass = 'status-new';
                     let statusText  = 'Новая';
 
-                    if (rawStatus === 'approved' || rawStatus === 'одобрена' || rawStatus === 'одобрено') {
+                    if (rawStatus === 'approved' || rawStatus === 'одобрена') {
                         statusClass = 'status-approved';
                         statusText  = 'Одобрена';
-                    } else if (rawStatus === 'rejected' || rawStatus === 'отклонена' || rawStatus === 'отклонено') {
+                    } else if (rawStatus === 'rejected' || rawStatus === 'отклонена') {
                         statusClass = 'status-rejected';
                         statusText  = 'Отклонена';
                     } else if (
-                        rawStatus === 'pending' ||
-                        rawStatus === 'in_review' ||
-                        rawStatus === 'in-review' ||
-                        rawStatus === 'processing' ||
-                        rawStatus === 'consideration' ||
-                        rawStatus === 'review' ||
-                        rawStatus === 'на рассмотрении' ||
-                        rawStatus === 'в рассмотрении'
+                        rawStatus === 'pending' || rawStatus === 'in_review' ||
+                        rawStatus === 'processing' || rawStatus === 'на рассмотрении'
                     ) {
                         statusClass = 'status-pending';
                         statusText  = 'На рассмотрении';
-                    } else if (rawStatus === 'new' || rawStatus === 'новая' || rawStatus === '') {
-                        statusClass = 'status-new';
-                        statusText  = 'Новая';
-                    } else {
-                        statusClass = 'status-new';
-                        statusText  = app.status || 'Новая';
                     }
 
                     list.innerHTML += `
@@ -465,8 +609,7 @@
 
             const user = getUser();
             if (user.full_name) document.getElementById('profileName').textContent = user.full_name;
-            if (user.email) document.getElementById('profileEmail').innerHTML = `<i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>${user.email}`;
-            if (user.phone) document.getElementById('profilePhone').innerHTML = `<i class="fa-solid fa-phone me-2" aria-hidden="true"></i>${user.phone}`;
+            if (user.email) document.getElementById('profileEmail').textContent = user.email;
 
             await renderFavorites();
             await renderApplications();
