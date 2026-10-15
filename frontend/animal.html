@@ -25,7 +25,7 @@
         }
 
         /* ============================================================
-           ФОТО — обтекается текстом (float: left) на компьютере
+           ФОТО — обтекается текстом (float: left)
            ============================================================ */
         .animal-swiper-wrap {
             float: left;
@@ -169,7 +169,6 @@
         .skill-tag.no  { background: var(--color-sand-light); color: var(--color-sand-dark); }
         .skill-tag i   { font-size: 13px; }
 
-        /* ТЕКСТ — обтекает фото */
         .medical-notes {
             font-size: 16.5px;
             color: var(--color-text-light);
@@ -185,7 +184,6 @@
             white-space: pre-line;
         }
 
-        /* Кнопки — очищают обтекание */
         .animal-actions {
             display: flex;
             gap: 12px;
@@ -202,51 +200,74 @@
         }
 
         /* ============================================================
-           ПЛАНШЕТ И ТЕЛЕФОН — фото сверху на всю ширину, текст под ним
+           ПЛАНШЕТ И ТЕЛЕФОН — фото СЛЕВА (уменьшенное), текст обтекает
            ============================================================ */
         @media (max-width: 991px) {
             .animal-card { padding: 22px; }
 
             .animal-swiper-wrap {
+                float: left;
+                width: 42%;
+                height: 340px;
+                margin: 0 20px 16px 0;
+            }
+
+            .animal-info {
+                width: auto;
                 float: none;
-                width: 100%;
-                height: 380px;
-                margin: 0 0 22px 0;
             }
 
-            .animal-info,
-            .animal-actions {
-                width: 100%;
-                float: none;
-                clear: both;
-            }
-
-            .health-tags,
-            .animal-tags,
-            .skills-tags {
-                width: 100%;
-            }
-
-            .animal-info h1 { font-size: 28px; }
-        }
-
-        @media (max-width: 767px) {
-            .animal-card { padding: 18px; }
-            .animal-swiper-wrap { height: 320px; }
             .animal-info h1 { font-size: 26px; }
-            .medical-notes,
-            .animal-desc { font-size: 15px; }
 
-            /* Уменьшаем теги, чтобы не вылезали */
             .health-tag,
             .skill-tag,
             .animal-tags .pet-tag {
-                font-size: 13.5px;
-                padding: 8px 14px;
+                font-size: 13px;
+                padding: 7px 13px;
             }
 
-            /* Кнопки — на всю ширину столбиком */
-            .animal-actions { flex-direction: column; }
+            .medical-notes,
+            .animal-desc {
+                font-size: 15px;
+                line-height: 1.65;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .animal-card { padding: 18px; }
+
+            /* На очень узких экранах — фото ещё меньше */
+            .animal-swiper-wrap {
+                width: 38%;
+                height: 260px;
+                margin: 0 14px 12px 0;
+            }
+
+            .animal-info h1 { font-size: 22px; }
+
+            .animal-meta {
+                font-size: 13.5px;
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+
+            .block-title { font-size: 11px; }
+
+            .health-tag,
+            .skill-tag,
+            .animal-tags .pet-tag {
+                font-size: 12px;
+                padding: 6px 11px;
+            }
+
+            .medical-notes,
+            .animal-desc {
+                font-size: 14px;
+            }
+
+            .animal-actions {
+                flex-direction: column;
+            }
             .animal-actions .btn-primary-custom,
             .animal-actions .btn-outline-custom {
                 width: 100%;
@@ -303,7 +324,7 @@
                 </div>
             </div>
 
-            <!-- ТЕКСТ — обтекает фото справа и снизу -->
+            <!-- ТЕКСТ — обтекает фото -->
             <div class="animal-info">
 
                 <div class="animal-meta" id="animalMeta"></div>
