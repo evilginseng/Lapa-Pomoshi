@@ -403,7 +403,7 @@
         /* Формирует список фото: если в БД есть images-массив — берём оттуда,
            иначе основное фото + вариации */
         function buildPhotoList(pet) {
-            if (Array.isArray(pet.img) && pet.img.length > 0) {
+            if (Array.isArray(pet.imegs) && pet.imegs.length > 0) {
                 return pet.images;
             }
             const base = pet.img;
