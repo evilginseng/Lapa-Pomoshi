@@ -25,7 +25,7 @@
         }
 
         /* ============================================================
-           ФОТО — плавает слева
+           ФОТО — обтекается текстом (float: left) на компьютере
            ============================================================ */
         .animal-swiper-wrap {
             float: left;
@@ -83,10 +83,6 @@
             font-size: 12px;
             font-weight: 700;
         }
-        @media (max-width: 767px) {
-            .animal-swiper .swiper-button-next,
-            .animal-swiper .swiper-button-prev { display: none; }
-        }
 
         .animal-swiper .swiper-pagination { bottom: 14px !important; }
         .animal-swiper .swiper-pagination-bullet {
@@ -114,13 +110,8 @@
         }
 
         /* ============================================================
-           БЛОК СПРАВА ОТ ФОТО — занимает всю ширину до конца фото
+           ТЕКСТ — обтекает фото слева
            ============================================================ */
-        .animal-right {
-            overflow: hidden;
-            /* Блок обтекает фото справа */
-        }
-
         .animal-info h1 { font-size: 38px; margin-bottom: 14px; }
 
         .animal-meta {
@@ -147,7 +138,7 @@
         }
         .block-title i { color: var(--color-blue); font-size: 14px; }
 
-        .health-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+        .health-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .health-tag {
             display: inline-flex;
             align-items: center;
@@ -161,7 +152,7 @@
         .health-tag.no  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
         .health-tag i   { font-size: 13px; }
 
-        .animal-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+        .animal-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .animal-tags .pet-tag { font-size: 15px; padding: 9px 18px; }
 
         .skills-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
@@ -178,14 +169,7 @@
         .skill-tag.no  { background: var(--color-sand-light); color: var(--color-sand-dark); }
         .skill-tag i   { font-size: 13px; }
 
-        /* ============================================================
-           БЛОК ПОД ФОТО — на всю ширину, с отступом от фото
-           ============================================================ */
-        .animal-bottom {
-            clear: both;             /* начинает новую строку под фото */
-            padding-top: 28px;       /* отступ от фото */
-        }
-
+        /* ТЕКСТ — обтекает фото */
         .medical-notes {
             font-size: 16.5px;
             color: var(--color-text-light);
@@ -201,12 +185,15 @@
             white-space: pre-line;
         }
 
+        /* Кнопки — очищают обтекание */
         .animal-actions {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            padding-top: 24px;
+            padding-top: 22px;
             border-top: 1px solid var(--color-border-light);
+            clear: both;
+            margin-top: 8px;
         }
         .animal-actions .btn-primary-custom,
         .animal-actions .btn-outline-custom {
@@ -215,19 +202,56 @@
         }
 
         /* ============================================================
-           Адаптив
+           ПЛАНШЕТ И ТЕЛЕФОН — фото сверху на всю ширину, текст под ним
            ============================================================ */
-        @media (max-width: 767px) {
-            .animal-card { padding: 20px; }
+        @media (max-width: 991px) {
+            .animal-card { padding: 22px; }
+
             .animal-swiper-wrap {
                 float: none;
                 width: 100%;
-                height: 340px;
-                margin: 0 0 24px 0;
+                height: 380px;
+                margin: 0 0 22px 0;
             }
+
+            .animal-info,
+            .animal-actions {
+                width: 100%;
+                float: none;
+                clear: both;
+            }
+
+            .health-tags,
+            .animal-tags,
+            .skills-tags {
+                width: 100%;
+            }
+
             .animal-info h1 { font-size: 28px; }
+        }
+
+        @media (max-width: 767px) {
+            .animal-card { padding: 18px; }
+            .animal-swiper-wrap { height: 320px; }
+            .animal-info h1 { font-size: 26px; }
             .medical-notes,
-            .animal-desc { font-size: 15.5px; }
+            .animal-desc { font-size: 15px; }
+
+            /* Уменьшаем теги, чтобы не вылезали */
+            .health-tag,
+            .skill-tag,
+            .animal-tags .pet-tag {
+                font-size: 13.5px;
+                padding: 8px 14px;
+            }
+
+            /* Кнопки — на всю ширину столбиком */
+            .animal-actions { flex-direction: column; }
+            .animal-actions .btn-primary-custom,
+            .animal-actions .btn-outline-custom {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -269,7 +293,7 @@
     <section class="animal-detail container">
         <div class="animal-card">
 
-            <!-- ФОТО — плавает слева -->
+            <!-- ФОТО — плавает слева, текст обтекает -->
             <div class="animal-swiper-wrap">
                 <div class="swiper animal-swiper" id="animalSwiper">
                     <div class="swiper-wrapper" id="swiperWrapper"></div>
@@ -279,25 +303,18 @@
                 </div>
             </div>
 
-            <!-- БЛОК СПРАВА — мета, теги, здоровье, навыки -->
-            <div class="animal-right">
-                <div class="animal-info">
+            <!-- ТЕКСТ — обтекает фото справа и снизу -->
+            <div class="animal-info">
 
-                    <div class="animal-meta" id="animalMeta"></div>
+                <div class="animal-meta" id="animalMeta"></div>
 
-                    <div class="block-title"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Здоровье</div>
-                    <div class="health-tags" id="healthTags"></div>
+                <div class="block-title"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Здоровье</div>
+                <div class="health-tags" id="healthTags"></div>
 
-                    <div class="animal-tags" id="animalTags"></div>
+                <div class="animal-tags" id="animalTags"></div>
 
-                    <div class="block-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Навыки</div>
-                    <div class="skills-tags" id="skillsTags"></div>
-
-                </div>
-            </div>
-
-            <!-- БЛОК ПОД ФОТО — на всю ширину, с отступом -->
-            <div class="animal-bottom">
+                <div class="block-title"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Навыки</div>
+                <div class="skills-tags" id="skillsTags"></div>
 
                 <div id="medicalBlock" style="display: none;">
                     <div class="block-title"><i class="fa-solid fa-notes-medical" aria-hidden="true"></i> Медицинские заметки</div>
@@ -307,15 +324,16 @@
                 <div class="block-title"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Характер и история</div>
                 <p class="animal-desc" id="animalDesc"></p>
 
-                <div class="animal-actions">
-                    <button class="btn-primary-custom" onclick="openAdoptModal()">
-                        <i class="fa-solid fa-paw" aria-hidden="true"></i> Забрать домой
-                    </button>
-                    <a href="catalog.html" class="btn-outline-custom">
-                        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> В каталог
-                    </a>
-                </div>
+            </div>
 
+            <!-- КНОПКИ — внизу на всю ширину -->
+            <div class="animal-actions">
+                <button class="btn-primary-custom" onclick="openAdoptModal()">
+                    <i class="fa-solid fa-paw" aria-hidden="true"></i> Забрать домой
+                </button>
+                <a href="catalog.html" class="btn-outline-custom">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> В каталог
+                </a>
             </div>
 
         </div>
