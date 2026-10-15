@@ -155,7 +155,14 @@
         .animal-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .animal-tags .pet-tag { font-size: 15px; padding: 9px 18px; }
 
-        .skills-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+        /* НАВЫКИ — по центру */
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
         .skill-tag {
             display: inline-flex;
             align-items: center;
@@ -200,15 +207,15 @@
         }
 
         /* ============================================================
-           ПЛАНШЕТ И ТЕЛЕФОН — фото СЛЕВА (уменьшенное), текст обтекает
+           ПЛАНШЕТ И ТЕЛЕФОН — фото СЛЕВА, текст обтекает
            ============================================================ */
         @media (max-width: 991px) {
             .animal-card { padding: 22px; }
 
             .animal-swiper-wrap {
                 float: left;
-                width: 42%;
-                height: 340px;
+                width: 48%;
+                height: 380px;
                 margin: 0 20px 16px 0;
             }
 
@@ -236,10 +243,9 @@
         @media (max-width: 600px) {
             .animal-card { padding: 18px; }
 
-            /* На очень узких экранах — фото ещё меньше */
             .animal-swiper-wrap {
-                width: 38%;
-                height: 260px;
+                width: 44%;
+                height: 300px;
                 margin: 0 14px 12px 0;
             }
 
@@ -314,7 +320,6 @@
     <section class="animal-detail container">
         <div class="animal-card">
 
-            <!-- ФОТО — плавает слева, текст обтекает -->
             <div class="animal-swiper-wrap">
                 <div class="swiper animal-swiper" id="animalSwiper">
                     <div class="swiper-wrapper" id="swiperWrapper"></div>
@@ -324,7 +329,6 @@
                 </div>
             </div>
 
-            <!-- ТЕКСТ — обтекает фото -->
             <div class="animal-info">
 
                 <div class="animal-meta" id="animalMeta"></div>
@@ -347,7 +351,6 @@
 
             </div>
 
-            <!-- КНОПКИ — внизу на всю ширину -->
             <div class="animal-actions">
                 <button class="btn-primary-custom" onclick="openAdoptModal()">
                     <i class="fa-solid fa-paw" aria-hidden="true"></i> Забрать домой
