@@ -18,25 +18,32 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-lg);
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
         }
+        .animal-card .row { align-items: stretch; }
 
+        /* ============================================================
+           СЛАЙДЕР — фото ровно в высоту экрана
+           ============================================================ */
+        .animal-img-col {
+            display: flex;
+            min-height: 100%;
+        }
         .animal-swiper {
             width: 100%;
             height: 100%;
-            min-height: 460px;
-            max-height: 560px;
+            min-height: calc(100vh - 320px);
+            max-height: calc(100vh - 180px);
             position: relative;
         }
         .animal-swiper .swiper-slide {
             overflow: hidden;
+            height: auto;
         }
         .animal-swiper .swiper-slide img {
             width: 100%;
             height: 100%;
-            min-height: 460px;
-            max-height: 560px;
             object-fit: cover;
             display: block;
         }
@@ -47,8 +54,8 @@
 
         .animal-swiper .swiper-button-next,
         .animal-swiper .swiper-button-prev {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             background: rgba(255, 255, 255, 0.65);
             border-radius: 50%;
             color: var(--color-dark-green);
@@ -59,7 +66,7 @@
         }
         .animal-swiper:hover .swiper-button-next,
         .animal-swiper:hover .swiper-button-prev {
-            opacity: 0.7;
+            opacity: 0.75;
         }
         .animal-swiper .swiper-button-next:hover,
         .animal-swiper .swiper-button-prev:hover {
@@ -69,22 +76,18 @@
         }
         .animal-swiper .swiper-button-next::after,
         .animal-swiper .swiper-button-prev::after {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
         }
         @media (max-width: 767px) {
             .animal-swiper .swiper-button-next,
-            .animal-swiper .swiper-button-prev {
-                display: none;
-            }
+            .animal-swiper .swiper-button-prev { display: none; }
         }
 
-        .animal-swiper .swiper-pagination {
-            bottom: 12px !important;
-        }
+        .animal-swiper .swiper-pagination { bottom: 14px !important; }
         .animal-swiper .swiper-pagination-bullet {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             background: rgba(255, 255, 255, 0.55);
             opacity: 1;
             margin: 0 4px !important;
@@ -92,7 +95,7 @@
         }
         .animal-swiper .swiper-pagination-bullet-active {
             background: var(--color-white);
-            width: 20px;
+            width: 22px;
             border-radius: 4px;
         }
 
@@ -100,112 +103,110 @@
             content: '';
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            height: 60px;
+            height: 70px;
             background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
             pointer-events: none;
             z-index: 5;
         }
 
         /* ============================================================
-           ИНФОРМАЦИЯ СПРАВА — весь текст помещается без прокрутки
+           ИНФОРМАЦИЯ — крупный текст
            ============================================================ */
         .animal-info {
-            padding: 28px 32px;
+            padding: 36px 40px;
             text-align: left;
-            max-height: none;
-            overflow-y: visible;
         }
-        .animal-info h1 { font-size: 32px; margin-bottom: 10px; }
+        .animal-info h1 { font-size: 40px; margin-bottom: 14px; }
 
         .animal-meta {
             display: flex;
-            gap: 14px;
+            gap: 18px;
             flex-wrap: wrap;
-            margin-bottom: 14px;
-            font-size: 12.5px;
+            margin-bottom: 22px;
+            font-size: 14.5px;
             color: var(--color-text-light);
         }
-        .animal-meta span { display: flex; align-items: center; gap: 6px; }
-        .animal-meta i { color: var(--color-blue); font-size: 12px; }
+        .animal-meta span { display: flex; align-items: center; gap: 7px; }
+        .animal-meta i { color: var(--color-blue); font-size: 14px; }
 
         .block-title {
-            font-size: 10px;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--color-muted);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .block-title i { color: var(--color-blue); font-size: 11px; }
+        .block-title i { color: var(--color-blue); font-size: 12px; }
 
-        .health-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .health-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
         .health-tag {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
+            gap: 6px;
+            padding: 7px 14px;
             border-radius: 50px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
         }
         .health-tag.yes { background: var(--color-green-light); color: var(--color-dark-green); }
         .health-tag.no  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
-        .health-tag i   { font-size: 10px; }
+        .health-tag i   { font-size: 11px; }
 
-        .animal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .animal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
 
-        .skills-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
         .skill-tag {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
+            gap: 6px;
+            padding: 7px 14px;
             border-radius: 50px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
         }
         .skill-tag.yes { background: var(--color-blue-light); color: var(--color-blue-dark); }
         .skill-tag.no  { background: var(--color-sand-light); color: var(--color-sand-dark); }
-        .skill-tag i   { font-size: 10px; }
+        .skill-tag i   { font-size: 11px; }
 
         .medical-notes {
-            font-size: 12.5px;
+            font-size: 15px;
             color: var(--color-text-light);
-            line-height: 1.55;
-            margin-bottom: 14px;
+            line-height: 1.7;
+            margin-bottom: 22px;
         }
 
         .animal-desc {
-            font-size: 12.5px;
+            font-size: 15px;
             color: var(--color-text-light);
-            line-height: 1.55;
-            margin-bottom: 18px;
+            line-height: 1.7;
+            margin-bottom: 26px;
             white-space: pre-line;
         }
 
         .animal-actions {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            padding-top: 16px;
+            padding-top: 22px;
             border-top: 1px solid var(--color-border-light);
         }
         .animal-actions .btn-primary-custom,
         .animal-actions .btn-outline-custom {
-            padding: 11px 22px;
-            font-size: 13.5px;
+            padding: 14px 28px;
+            font-size: 15px;
         }
 
+        /* На мобильных фото отдельно, текст отдельно */
         @media (max-width: 991px) {
-            .animal-info { padding: 22px 20px; }
-            .animal-info h1 { font-size: 26px; }
-            .animal-swiper,
-            .animal-swiper .swiper-slide img {
-                min-height: 320px;
-                max-height: 400px;
+            .animal-info { padding: 28px 24px; }
+            .animal-info h1 { font-size: 30px; }
+            .animal-swiper {
+                min-height: 380px;
+                max-height: 480px;
             }
         }
     </style>
@@ -237,7 +238,7 @@
         </div>
     </nav>
 
-    <section class="page-header-gradient" style="padding: 40px 0 30px;">
+    <section class="page-header-gradient" style="padding: 30px 0 20px;">
         <div class="container">
             <span class="eyebrow">Карточка питомца</span>
             <h1 class="page-title" id="pagePetName">Загрузка...</h1>
@@ -248,7 +249,7 @@
     <section class="animal-detail container">
         <div class="animal-card">
             <div class="row g-0">
-                <div class="col-lg-6">
+                <div class="col-lg-6 animal-img-col">
                     <div class="swiper animal-swiper" id="animalSwiper">
                         <div class="swiper-wrapper" id="swiperWrapper"></div>
                         <div class="swiper-button-next"></div>
