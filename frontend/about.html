@@ -34,6 +34,11 @@
             }
         }
 
+        /* Мобильный пункт «Кабинет» — скрыт на ПК */
+        @media (min-width: 992px) {
+            .nav-item-mobile-account { display: none !important; }
+        }
+
         .mission-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -588,6 +593,13 @@
                     <li class="nav-item"><a class="nav-link-custom active" href="about.html">О приюте</a></li>
                     <li class="nav-item"><a class="nav-link-custom" href="contacts.html">Контакты</a></li>
                     <li class="nav-item"><a class="nav-link-custom" href="donate.html">Помощь</a></li>
+                    <!-- Мобильный пункт «Кабинет» — виден только на телефоне и планшете -->
+                    <li class="nav-item nav-item-mobile-account">
+                        <a class="nav-link-custom" href="account.html">
+                            <i class="fa-regular fa-user me-2" aria-hidden="true"></i>Кабинет
+                            <span class="fav-counter" id="favCounterMobile" style="position: static; margin-left: 6px; display: none;"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <a class="btn-login d-none d-lg-inline-flex" href="account.html">
@@ -605,6 +617,7 @@
         </div>
     </section>
 
+    <!-- 1. МИССИЯ -->
     <section class="section container">
         <div class="reveal">
             <span class="eyebrow green">Наша миссия</span>
@@ -630,6 +643,7 @@
         </div>
     </section>
 
+    <!-- 2. ИСТОРИЯ ПРИЮТА -->
     <section class="timeline-section">
         <div class="container">
             <div class="reveal">
@@ -674,6 +688,7 @@
         </div>
     </section>
 
+    <!-- 3. ИХ СУДЬБЫ ИЗМЕНИЛИСЬ -->
     <section class="stories-section">
         <div class="container">
             <div class="reveal">
@@ -701,6 +716,7 @@
         </div>
     </section>
 
+    <!-- 4. ЧЕМ ЗАНИМАЕТСЯ ПРИЮТ -->
     <section class="work-section">
         <div class="container">
             <div class="reveal">
@@ -733,6 +749,7 @@
         </div>
     </section>
 
+    <!-- 5. НАШИ РЕЗУЛЬТАТЫ -->
     <section class="stats-section">
         <div class="stats-bg">
             <div class="container">
@@ -751,6 +768,7 @@
         </div>
     </section>
 
+    <!-- 6. ЦИТАТА АННЫ -->
     <section class="quote-section">
         <div class="container">
             <div class="quote-box reveal-zoom">
@@ -766,6 +784,7 @@
         </div>
     </section>
 
+    <!-- 7. НАША КОМАНДА -->
     <section class="section container">
         <div class="reveal">
             <span class="eyebrow">Наша команда</span>
@@ -800,6 +819,7 @@
         </div>
     </section>
 
+    <!-- 8. КАК ПОМОЧЬ ПРИЮТУ -->
     <section class="help-section">
         <div class="container">
             <div class="reveal">
@@ -848,6 +868,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const elements = document.querySelectorAll('.reveal, .reveal-zoom');
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -863,13 +887,31 @@
 
             elements.forEach(el => observer.observe(el));
 
+            /* Счётчик избранного (ПК + мобильный) */
             try {
                 const fav = localStorage.getItem('lapa_favorites');
                 const favs = fav ? JSON.parse(fav) : [];
+                const count = favs.length;
+
                 const counter = document.getElementById('favCounter');
                 if (counter) {
-                    counter.textContent = favs.length;
-                    counter.classList.toggle('visible', favs.length > 0);
+                    counter.textContent = count;
+                    counter.classList.toggle('visible', count > 0);
+                }
+
+                const mobileCounter = document.getElementById('favCounterMobile');
+                if (mobileCounter) {
+                    mobileCounter.textContent = count;
+                    mobileCounter.style.display = count > 0 ? 'inline-flex' : 'none';
+                    mobileCounter.style.alignItems = 'center';
+                    mobileCounter.style.justifyContent = 'center';
+                    mobileCounter.style.width = '18px';
+                    mobileCounter.style.height = '18px';
+                    mobileCounter.style.borderRadius = '50%';
+                    mobileCounter.style.background = '#E85A5A';
+                    mobileCounter.style.color = '#fff';
+                    mobileCounter.style.fontSize = '10px';
+                    mobileCounter.style.fontWeight = '700';
                 }
             } catch (e) {}
         });
