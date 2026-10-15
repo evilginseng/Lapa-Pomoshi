@@ -11,6 +11,37 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
+        /* ============================================================
+           АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+           ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-zoom {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-zoom.visible { opacity: 1; transform: scale(1); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal-zoom {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Мобильный пункт «Кабинет» — скрыт на ПК */
+        @media (min-width: 992px) {
+            .nav-item-mobile-account { display: none !important; }
+        }
+
         .modal-checkbox-row {
             display: flex;
             align-items: center;
@@ -74,6 +105,13 @@
                     <li class="nav-item"><a class="nav-link-custom" href="about.html">О приюте</a></li>
                     <li class="nav-item"><a class="nav-link-custom" href="contacts.html">Контакты</a></li>
                     <li class="nav-item"><a class="nav-link-custom" href="donate.html">Помощь</a></li>
+                    <!-- Мобильный пункт «Кабинет» — виден только на телефоне и планшете -->
+                    <li class="nav-item nav-item-mobile-account">
+                        <a class="nav-link-custom" href="account.html">
+                            <i class="fa-regular fa-user me-2" aria-hidden="true"></i>Кабинет
+                            <span class="fav-counter" id="favCounterMobile" style="position: static; margin-left: 6px; display: none;"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <a class="btn-login d-none d-lg-inline-flex" href="account.html">
@@ -92,7 +130,8 @@
     </section>
 
     <section class="container" style="padding-bottom: 60px;">
-        <div class="filters-wrapper">
+        <!-- ФИЛЬТРЫ — плавное появление -->
+        <div class="filters-wrapper reveal">
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-3 col-md-4 col-6">
                     <div class="filter-group">
@@ -291,11 +330,28 @@
         }
 
         function updateFavCounter() {
-            const counter = document.getElementById('favCounter');
-            if (!counter) return;
             const count = getFavorites().length;
-            counter.textContent = count;
-            counter.classList.toggle('visible', count > 0);
+
+            const counter = document.getElementById('favCounter');
+            if (counter) {
+                counter.textContent = count;
+                counter.classList.toggle('visible', count > 0);
+            }
+
+            const mobileCounter = document.getElementById('favCounterMobile');
+            if (mobileCounter) {
+                mobileCounter.textContent = count;
+                mobileCounter.style.display = count > 0 ? 'inline-flex' : 'none';
+                mobileCounter.style.alignItems = 'center';
+                mobileCounter.style.justifyContent = 'center';
+                mobileCounter.style.width = '18px';
+                mobileCounter.style.height = '18px';
+                mobileCounter.style.borderRadius = '50%';
+                mobileCounter.style.background = '#E85A5A';
+                mobileCounter.style.color = '#fff';
+                mobileCounter.style.fontSize = '10px';
+                mobileCounter.style.fontWeight = '700';
+            }
         }
 
         function showToast(text, type = 'success') {
@@ -418,6 +474,31 @@
             }
         }
 
+        /* ============================================================
+           АНИМАЦИИ ПОЯВЛЕНИЯ КАРТОЧЕК ПРИ СКРОЛЛЕ
+           ============================================================ */
+        function initScrollAnimations() {
+            const elements = document.querySelectorAll('.reveal:not(.visible), .reveal-zoom:not(.visible)');
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(el => el.classList.add('visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            elements.forEach(el => observer.observe(el));
+        }
+
         function renderPets() {
             const grid = document.getElementById('petsGrid');
             if (!grid) return;
@@ -452,10 +533,11 @@
                     : '';
 
                 const petPhoto = (pet.images && pet.images[0]) || pet.img;
+                const delay = Math.min(idx * 60, 400);
 
                 grid.innerHTML += `
                     <div class="col-xl-3 col-lg-4 col-md-6">
-                        <div class="pet-card-custom">
+                        <div class="pet-card-custom reveal" style="transition-delay: ${delay}ms">
                             <div class="pet-image-wrapper" onclick="goToAnimal(${pet.id})">
                                 <button class="pet-fav-btn ${isFav ? 'active' : ''}" data-id="${pet.id}" onclick="event.stopPropagation(); toggleFavorite(${pet.id})" aria-label="В избранное">
                                     <i class="fa-heart ${isFav ? 'fa-solid' : 'fa-regular'}" aria-hidden="true"></i>
@@ -481,6 +563,7 @@
             });
 
             renderPagination();
+            initScrollAnimations();
         }
 
         function renderPagination() {
@@ -568,6 +651,8 @@
                     if (e.target === overlay) closeModal(overlay.id);
                 });
             });
+
+            initScrollAnimations();
         });
     </script>
 </body>
