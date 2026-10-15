@@ -11,10 +11,6 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /*
-         * Страница авторизации: форма входа и регистрации.
-         * Контент центрируется по вертикали и горизонтали, фон — градиент.
-         */
         body {
             min-height: 100vh;
             display: flex;
@@ -25,7 +21,6 @@
         }
         .auth-container { width: 100%; max-width: 460px; }
 
-        /* Логотип и название приюта над формой */
         .auth-logo { text-align: center; margin-bottom: 32px; }
         .auth-logo a { display: inline-flex; align-items: center; gap: 12px; }
         .auth-logo .brand-mark {
@@ -53,7 +48,6 @@
             margin-top: 4px;
         }
 
-        /* Белая карточка с формой */
         .auth-box {
             background: var(--color-white);
             border-radius: var(--radius-lg);
@@ -61,8 +55,15 @@
             box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* Декоративная полоса сверху с градиентом из четырёх цветов сайта */
+        .auth-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
         .auth-box::before {
             content: '';
             position: absolute;
@@ -75,14 +76,29 @@
                 var(--color-dark-green) 100%);
         }
 
-        /* Переключатель между входом и регистрацией */
         .auth-tabs {
+            position: relative;
             display: flex;
-            gap: 8px;
             margin-bottom: 32px;
             background: var(--color-bg);
             padding: 6px;
             border-radius: 50px;
+        }
+        .auth-tabs::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            background: var(--color-white);
+            border-radius: 50px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
+        .auth-tabs.register-active::before {
+            transform: translateX(100%);
         }
         .auth-tab {
             flex: 1;
@@ -95,15 +111,28 @@
             font-weight: 600;
             color: var(--color-muted);
             cursor: pointer;
-            transition: var(--transition);
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
-        .auth-tab.active {
-            background: var(--color-white);
-            color: var(--color-dark-green);
-            box-shadow: var(--shadow-md);
+        .auth-tab.active { color: var(--color-dark-green); }
+
+        .auth-forms { position: relative; overflow: hidden; }
+        .auth-form { transition: opacity 0.4s ease, transform 0.4s ease; }
+        .auth-form.hidden { display: none; }
+        .auth-form.appearing {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        .auth-form.appearing-left {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        .auth-form.appeared {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        /* Заголовок и подпись над полями ввода */
         .auth-title { font-size: 28px; margin-bottom: 8px; text-align: center; }
         .auth-subtitle {
             font-size: 14px;
@@ -112,7 +141,6 @@
             margin-bottom: 32px;
         }
 
-        /* ---------- Поля формы ---------- */
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-label {
             display: block;
@@ -142,6 +170,22 @@
             box-shadow: 0 0 0 4px rgba(150, 184, 228, 0.15);
         }
 
+        .form-error-banner {
+            display: none;
+            background: rgba(232, 90, 90, 0.1);
+            color: var(--color-red);
+            border: 1.5px solid rgba(232, 90, 90, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-size: 13.5px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-error-banner.visible { display: flex; }
+        .form-error-banner i { font-size: 15px; }
+
         .btn-submit {
             width: 100%;
             padding: 16px;
@@ -166,7 +210,6 @@
             box-shadow: var(--shadow-blue);
         }
 
-        /* Подсказка под кнопкой — "уже есть аккаунт" и т.п. */
         .auth-hint {
             text-align: center;
             font-size: 13px;
@@ -174,8 +217,8 @@
             margin-top: 20px;
         }
         .auth-hint a { color: var(--color-blue-dark); font-weight: 600; }
+        .auth-hint a:hover { color: var(--color-dark-green); }
 
-        /* Ссылка "на главную" под карточкой */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -184,11 +227,9 @@
             color: var(--color-dark-green);
             font-weight: 500;
             margin-top: 24px;
-            text-align: center;
         }
         .back-link:hover { color: var(--color-blue-dark); }
 
-        /* Скрывает неактивную форму — вход или регистрацию */
         .form-hidden { display: none; }
     </style>
 </head>
@@ -202,66 +243,78 @@
             </a>
         </div>
 
-        <div class="auth-box">
-            <div class="auth-tabs">
+        <div class="auth-box" id="authBox">
+            <div class="auth-tabs" id="authTabs">
                 <button class="auth-tab active" onclick="switchTab('login')">Вход</button>
                 <button class="auth-tab" onclick="switchTab('register')">Регистрация</button>
             </div>
 
-            <!-- Форма входа -->
-            <div id="loginForm">
-                <h3 class="auth-title">С возвращением!</h3>
-                <p class="auth-subtitle">Войдите, чтобы продолжить помогать животным</p>
+            <div class="auth-forms">
 
-                <div class="form-group">
-                    <label class="form-label" for="loginEmail">Email</label>
-                    <input type="email" class="form-input" id="loginEmail" placeholder="example@mail.ru">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="loginPassword">Пароль</label>
-                    <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
-                </div>
+                <div id="loginForm" class="auth-form">
+                    <h3 class="auth-title">С возвращением!</h3>
+                    <p class="auth-subtitle">Войдите, чтобы продолжить помогать животным</p>
 
-                <button class="btn-submit" onclick="doLogin()">
-                    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Войти
-                </button>
+                    <div class="form-error-banner" id="loginErrorBanner">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        <span id="loginErrorText"></span>
+                    </div>
 
-                <p class="auth-hint">
-                    Нет аккаунта?
-                    <a href="#" onclick="switchTab('register'); return false;">Зарегистрируйтесь</a>
-                </p>
-            </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="example@mail.ru">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Пароль</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
+                    </div>
 
-            <!-- Форма регистрации. Скрыта по умолчанию -->
-            <div id="registerForm" class="form-hidden">
-                <h3 class="auth-title">Создать аккаунт</h3>
-                <p class="auth-subtitle">Присоединяйтесь к нам — это займёт минуту</p>
+                    <button class="btn-submit" onclick="doLogin()">
+                        <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Войти
+                    </button>
 
-                <div class="form-group">
-                    <label class="form-label" for="regName">Имя</label>
-                    <input type="text" class="form-input" id="regName" placeholder="Как к вам обращаться">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="regEmail">Email</label>
-                    <input type="email" class="form-input" id="regEmail" placeholder="example@mail.ru">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="regPhone">Телефон</label>
-                    <input type="tel" class="form-input" id="regPhone" placeholder="+7 (___) ___-__-__">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="regPassword">Пароль</label>
-                    <input type="password" class="form-input" id="regPassword" placeholder="Минимум 6 символов">
+                    <p class="auth-hint">
+                        Нет аккаунта?
+                        <a href="#" onclick="switchTab('register'); return false;">Зарегистрируйтесь</a>
+                    </p>
                 </div>
 
-                <button class="btn-submit" onclick="doRegister()">
-                    <i class="fa-solid fa-user-plus" aria-hidden="true"></i> Зарегистрироваться
-                </button>
+                <div id="registerForm" class="auth-form hidden">
+                    <h3 class="auth-title">Создать аккаунт</h3>
+                    <p class="auth-subtitle">Присоединяйтесь к нам — это займёт минуту</p>
 
-                <p class="auth-hint">
-                    Уже есть аккаунт?
-                    <a href="#" onclick="switchTab('login'); return false;">Войдите</a>
-                </p>
+                    <div class="form-error-banner" id="registerErrorBanner">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        <span id="registerErrorText"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regName">Имя</label>
+                        <input type="text" class="form-input" id="regName" placeholder="Как к вам обращаться">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="regEmail">Email</label>
+                        <input type="email" class="form-input" id="regEmail" placeholder="example@mail.ru">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="regPhone">Телефон</label>
+                        <input type="tel" class="form-input" id="regPhone" placeholder="+7 (___) ___-__-__">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="regPassword">Пароль</label>
+                        <input type="password" class="form-input" id="regPassword" placeholder="Минимум 6 символов">
+                    </div>
+
+                    <button class="btn-submit" onclick="doRegister()">
+                        <i class="fa-solid fa-user-plus" aria-hidden="true"></i> Зарегистрироваться
+                    </button>
+
+                    <p class="auth-hint">
+                        Уже есть аккаунт?
+                        <a href="#" onclick="switchTab('login'); return false;">Войдите</a>
+                    </p>
+                </div>
+
             </div>
         </div>
 
@@ -273,14 +326,24 @@
     </div>
 
     <script>
-        /* Базовый адрес API. При деплое заменить на публичный URL бэкенда */
         const API_URL = 'https://lapa-pomoshi-12sn.onrender.com';
 
-        /*
-         * Всплывающее уведомление в углу экрана.
-         * Перекрывает предыдущее, если оно ещё не исчезло.
-         * type: success / error / info — задаёт иконку и цвет.
-         */
+        function showFormError(formId, text) {
+            const bannerId = formId === 'loginForm' ? 'loginErrorBanner' : 'registerErrorBanner';
+            const textId   = formId === 'loginForm' ? 'loginErrorText'    : 'registerErrorText';
+            const banner = document.getElementById(bannerId);
+            const span   = document.getElementById(textId);
+            if (!banner || !span) return;
+            span.textContent = text;
+            banner.classList.add('visible');
+        }
+
+        function hideFormError(formId) {
+            const bannerId = formId === 'loginForm' ? 'loginErrorBanner' : 'registerErrorBanner';
+            const banner = document.getElementById(bannerId);
+            if (banner) banner.classList.remove('visible');
+        }
+
         function showToast(text, type = 'success') {
             const old = document.querySelector('.toast-notification');
             if (old) old.remove();
@@ -301,37 +364,65 @@
             }, 2800);
         }
 
-        /*
-         * Переключает активную вкладку между "Вход" и "Регистрация".
-         * Снимает active со всех кнопок и блоков,
-         * затем ставит его на выбранные.
-         */
-        function switchTab(tab) {
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        let currentTab = 'login';
 
-            if (tab === 'login') {
-                document.querySelectorAll('.auth-tab')[0].classList.add('active');
-                document.getElementById('loginForm').classList.remove('form-hidden');
-                document.getElementById('registerForm').classList.add('form-hidden');
+        function switchTab(tab) {
+            if (tab === currentTab) return;
+
+            const tabs = document.getElementById('authTabs');
+            const tabButtons = document.querySelectorAll('.auth-tab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (tab === 'register') {
+                tabs.classList.add('register-active');
+                tabButtons[0].classList.remove('active');
+                tabButtons[1].classList.add('active');
             } else {
-                document.querySelectorAll('.auth-tab')[1].classList.add('active');
-                document.getElementById('registerForm').classList.remove('form-hidden');
-                document.getElementById('loginForm').classList.add('form-hidden');
+                tabs.classList.remove('register-active');
+                tabButtons[1].classList.remove('active');
+                tabButtons[0].classList.add('active');
             }
+
+            const slideFromRight = (tab === 'register');
+            const oldForm = (tab === 'register') ? loginForm : registerForm;
+            oldForm.classList.add(slideFromRight ? 'appearing-left' : 'appearing');
+
+            setTimeout(() => {
+                oldForm.classList.add('hidden');
+                oldForm.classList.remove('appearing', 'appearing-left', 'appeared');
+
+                const newForm = (tab === 'register') ? registerForm : loginForm;
+                newForm.classList.remove('hidden');
+                newForm.classList.add(slideFromRight ? 'appearing' : 'appearing-left');
+
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        newForm.classList.remove('appearing', 'appearing-left');
+                        newForm.classList.add('appeared');
+                    });
+                });
+
+                hideFormError(tab === 'register' ? 'registerForm' : 'loginForm');
+            }, 350);
+
+            currentTab = tab;
         }
 
-        /*
-         * Вход в аккаунт.
-         * Проверяет email и длину пароля, отправляет POST на /api/auth/login.
-         * При успехе сохраняет токен и данные пользователя в localStorage,
-         * затем переходит в личный кабинет.
-         */
         async function doLogin() {
             const email    = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
 
-            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
-            if (!password || password.length < 6) { showToast('Пароль должен быть минимум 6 символов', 'error'); return; }
+            hideFormError('loginForm');
+
+            if (!email || !email.includes('@')) {
+                showFormError('loginForm', 'Введите корректный email');
+                return;
+            }
+            if (!password || password.length < 6) {
+                showFormError('loginForm', 'Пароль должен быть минимум 6 символов');
+                return;
+            }
 
             try {
                 const res = await fetch(`${API_URL}/api/auth/login`, {
@@ -343,7 +434,7 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    showToast(data.error || 'Ошибка входа', 'error');
+                    showFormError('loginForm', 'Неверная почта или пароль');
                     return;
                 }
 
@@ -353,26 +444,22 @@
                 showToast('Вы успешно вошли!', 'success');
                 setTimeout(() => window.location.href = 'account.html', 800);
             } catch (err) {
-                showToast('Сервер не отвечает', 'error');
+                showFormError('loginForm', 'Сервер не отвечает. Подождите 30 секунд');
             }
         }
 
-        /*
-         * Регистрация нового пользователя.
-         * Проверяет обязательные поля, отправляет POST на /api/auth/register.
-         * При успехе сразу авторизует: сохраняет токен и данные пользователя,
-         * затем переходит в личный кабинет.
-         */
         async function doRegister() {
             const name     = document.getElementById('regName').value.trim();
             const email    = document.getElementById('regEmail').value.trim();
             const phone    = document.getElementById('regPhone').value.trim();
             const password = document.getElementById('regPassword').value.trim();
 
-            if (!name) { showToast('Укажите имя', 'error'); return; }
-            if (!email || !email.includes('@')) { showToast('Укажите корректный email', 'error'); return; }
-            if (!phone) { showToast('Укажите телефон', 'error'); return; }
-            if (!password || password.length < 6) { showToast('Пароль должен быть минимум 6 символов', 'error'); return; }
+            hideFormError('registerForm');
+
+            if (!name) { showFormError('registerForm', 'Укажите имя'); return; }
+            if (!email || !email.includes('@')) { showFormError('registerForm', 'Введите корректный email'); return; }
+            if (!phone) { showFormError('registerForm', 'Укажите телефон'); return; }
+            if (!password || password.length < 6) { showFormError('registerForm', 'Пароль минимум 6 символов'); return; }
 
             try {
                 const res = await fetch(`${API_URL}/api/auth/register`, {
@@ -384,7 +471,7 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    showToast(data.error || 'Ошибка регистрации', 'error');
+                    showFormError('registerForm', data.error || 'Ошибка регистрации');
                     return;
                 }
 
@@ -394,9 +481,14 @@
                 showToast('Регистрация успешна!', 'success');
                 setTimeout(() => window.location.href = 'account.html', 800);
             } catch (err) {
-                showToast('Сервер не отвечает', 'error');
+                showFormError('registerForm', 'Сервер не отвечает. Подождите 30 секунд');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const box = document.getElementById('authBox');
+            setTimeout(() => box.classList.add('visible'), 50);
+        });
     </script>
 </body>
 </html>
