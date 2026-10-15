@@ -12,21 +12,24 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        .animal-detail { padding: 40px 0 80px; }
+        .animal-detail { padding: 20px 0 60px; }
         .animal-card {
             background: var(--color-white);
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-lg);
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
         /* ============================================================
-           СЛАЙДЕР SWIPER — плавная автопрокрутка + незаметные стрелки
+           СЛАЙДЕР SWIPER — уменьшенные размеры
            ============================================================ */
         .animal-swiper {
             width: 100%;
             height: 100%;
-            min-height: 500px;
+            min-height: 420px;
+            max-height: 520px;
             position: relative;
         }
         .animal-swiper .swiper-slide {
@@ -35,21 +38,21 @@
         .animal-swiper .swiper-slide img {
             width: 100%;
             height: 100%;
-            min-height: 500px;
+            min-height: 420px;
+            max-height: 520px;
             object-fit: cover;
             display: block;
         }
 
-        /* Плавное перетекание между слайдами */
         .animal-swiper .swiper-wrapper {
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Стрелки — полупрозрачные, проявляются только при наведении на слайдер */
+        /* Стрелки */
         .animal-swiper .swiper-button-next,
         .animal-swiper .swiper-button-prev {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             background: rgba(255, 255, 255, 0.65);
             border-radius: 50%;
             color: var(--color-dark-green);
@@ -70,10 +73,9 @@
         }
         .animal-swiper .swiper-button-next::after,
         .animal-swiper .swiper-button-prev::after {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
         }
-        /* На тач-устройствах стрелки совсем убираем — там свайп */
         @media (max-width: 767px) {
             .animal-swiper .swiper-button-next,
             .animal-swiper .swiper-button-prev {
@@ -81,120 +83,135 @@
             }
         }
 
-        /* Точки — маленькие, деликатные */
+        /* Точки */
         .animal-swiper .swiper-pagination {
-            bottom: 16px !important;
+            bottom: 12px !important;
         }
         .animal-swiper .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: rgba(255, 255, 255, 0.55);
             opacity: 1;
-            margin: 0 5px !important;
+            margin: 0 4px !important;
             transition: all 0.35s ease;
         }
         .animal-swiper .swiper-pagination-bullet-active {
             background: var(--color-white);
-            width: 24px;
+            width: 20px;
             border-radius: 4px;
         }
 
-        /* Лёгкая тёмная полоса снизу, чтобы точки/стрелки читались на светлых фото */
         .animal-swiper::after {
             content: '';
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            height: 80px;
+            height: 60px;
             background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
             pointer-events: none;
             z-index: 5;
         }
 
-        .animal-info { padding: 48px; text-align: left; }
-        .animal-info h1 { font-size: 48px; margin-bottom: 16px; }
+        /* ============================================================
+           ИНФОРМАЦИЯ СПРАВА — уменьшены отступы и шрифты
+           ============================================================ */
+        .animal-info {
+            padding: 32px 32px;
+            text-align: left;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+        .animal-info h1 { font-size: 34px; margin-bottom: 12px; }
 
         .animal-meta {
             display: flex;
-            gap: 24px;
+            gap: 16px;
             flex-wrap: wrap;
-            margin-bottom: 24px;
-            font-size: 14px;
+            margin-bottom: 18px;
+            font-size: 13px;
             color: var(--color-text-light);
         }
-        .animal-meta span { display: flex; align-items: center; gap: 8px; }
-        .animal-meta i { color: var(--color-blue); }
+        .animal-meta span { display: flex; align-items: center; gap: 6px; }
+        .animal-meta i { color: var(--color-blue); font-size: 13px; }
 
         .block-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--color-muted);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .block-title i { color: var(--color-blue); font-size: 12px; }
+        .block-title i { color: var(--color-blue); font-size: 11px; }
 
-        .health-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .health-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
         .health-tag {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
+            gap: 5px;
+            padding: 5px 11px;
             border-radius: 50px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
         }
         .health-tag.yes { background: var(--color-green-light); color: var(--color-dark-green); }
         .health-tag.no  { background: var(--color-sand-light);  color: var(--color-sand-dark); }
-        .health-tag i   { font-size: 11px; }
+        .health-tag i   { font-size: 10px; }
 
-        .animal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .animal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
 
-        .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .skills-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
         .skill-tag {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
+            gap: 5px;
+            padding: 5px 11px;
             border-radius: 50px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
         }
         .skill-tag.yes { background: var(--color-blue-light); color: var(--color-blue-dark); }
         .skill-tag.no  { background: var(--color-sand-light); color: var(--color-sand-dark); }
-        .skill-tag i   { font-size: 11px; }
+        .skill-tag i   { font-size: 10px; }
 
         .medical-notes {
-            font-size: 15px;
+            font-size: 13.5px;
             color: var(--color-text-light);
-            line-height: 1.8;
-            margin-bottom: 28px;
+            line-height: 1.7;
+            margin-bottom: 20px;
         }
 
         .animal-desc {
-            font-size: 15px;
+            font-size: 13.5px;
             color: var(--color-text-light);
-            line-height: 1.8;
-            margin-bottom: 32px;
+            line-height: 1.7;
+            margin-bottom: 24px;
             white-space: pre-line;
         }
 
         .animal-actions {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
-            padding-top: 24px;
+            padding-top: 20px;
             border-top: 1px solid var(--color-border-light);
+        }
+        .animal-actions .btn-primary-custom,
+        .animal-actions .btn-outline-custom {
+            padding: 12px 24px;
+            font-size: 14px;
         }
 
         @media (max-width: 991px) {
-            .animal-info { padding: 32px 24px; }
-            .animal-info h1 { font-size: 32px; }
+            .animal-info { padding: 24px 20px; max-height: none; }
+            .animal-info h1 { font-size: 26px; }
             .animal-swiper,
-            .animal-swiper .swiper-slide img { min-height: 350px; }
+            .animal-swiper .swiper-slide img {
+                min-height: 320px;
+                max-height: 400px;
+            }
         }
     </style>
 </head>
@@ -225,7 +242,7 @@
         </div>
     </nav>
 
-    <section class="page-header-gradient" style="padding: 60px 0 40px;">
+    <section class="page-header-gradient" style="padding: 40px 0 30px;">
         <div class="container">
             <span class="eyebrow">Карточка питомца</span>
             <h1 class="page-title" id="pagePetName">Загрузка...</h1>
@@ -400,8 +417,6 @@
             counter.classList.toggle('visible', count > 0);
         }
 
-        /* Формирует список фото: если в БД есть images-массив — берём оттуда,
-           иначе основное фото + вариации */
         function buildPhotoList(pet) {
             if (Array.isArray(pet.images) && pet.images.length > 0) {
                 return pet.images;
@@ -431,7 +446,6 @@
 
                 document.getElementById('pagePetName').textContent = pet.name;
 
-                /* === СЛАЙДЕР === */
                 const photos = buildPhotoList(pet);
                 const wrapper = document.getElementById('swiperWrapper');
                 wrapper.innerHTML = photos.map((src, i) => `
@@ -445,7 +459,7 @@
 
                 swiperInstance = new Swiper('#animalSwiper', {
                     loop: photos.length > 1,
-                    speed: 1200,                         /* плавное перетекание */
+                    speed: 1200,
                     effect: 'slide',
                     autoplay: photos.length > 1 ? {
                         delay: 3500,
@@ -464,7 +478,6 @@
                     grabCursor: true
                 });
 
-                /* === МЕТА === */
                 document.getElementById('animalMeta').innerHTML = `
                     <span><i class="fa-solid fa-dog" aria-hidden="true"></i> ${pet.species}</span>
                     ${pet.breed ? `<span><i class="fa-solid fa-bookmark" aria-hidden="true"></i> ${pet.breed}</span>` : ''}
