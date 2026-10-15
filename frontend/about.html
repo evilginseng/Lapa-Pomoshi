@@ -13,27 +13,27 @@
     <style>
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(30px);
+            transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
         .reveal-zoom {
             opacity: 0;
-            transform: scale(0.85);
-            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+            transform: scale(0.92);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
         }
         .reveal-zoom.visible { opacity: 1; transform: scale(1); }
 
-        .reveal[data-delay="100"], .reveal-zoom[data-delay="100"] { transition-delay: 0.1s; }
-        .reveal[data-delay="200"], .reveal-zoom[data-delay="200"] { transition-delay: 0.2s; }
-        .reveal[data-delay="300"], .reveal-zoom[data-delay="300"] { transition-delay: 0.3s; }
-        .reveal[data-delay="400"], .reveal-zoom[data-delay="400"] { transition-delay: 0.4s; }
-        .reveal[data-delay="500"], .reveal-zoom[data-delay="500"] { transition-delay: 0.5s; }
-        .reveal[data-delay="600"], .reveal-zoom[data-delay="600"] { transition-delay: 0.6s; }
-        .reveal[data-delay="700"], .reveal-zoom[data-delay="700"] { transition-delay: 0.7s; }
-        .reveal[data-delay="800"], .reveal-zoom[data-delay="800"] { transition-delay: 0.8s; }
+        .reveal[data-delay="100"], .reveal-zoom[data-delay="100"] { transition-delay: 0.05s; }
+        .reveal[data-delay="200"], .reveal-zoom[data-delay="200"] { transition-delay: 0.1s; }
+        .reveal[data-delay="300"], .reveal-zoom[data-delay="300"] { transition-delay: 0.15s; }
+        .reveal[data-delay="400"], .reveal-zoom[data-delay="400"] { transition-delay: 0.2s; }
+        .reveal[data-delay="500"], .reveal-zoom[data-delay="500"] { transition-delay: 0.25s; }
+        .reveal[data-delay="600"], .reveal-zoom[data-delay="600"] { transition-delay: 0.3s; }
+        .reveal[data-delay="700"], .reveal-zoom[data-delay="700"] { transition-delay: 0.35s; }
+        .reveal[data-delay="800"], .reveal-zoom[data-delay="800"] { transition-delay: 0.4s; }
 
         @media (prefers-reduced-motion: reduce) {
             .reveal, .reveal-zoom {
@@ -294,7 +294,6 @@
             margin: 0;
         }
 
-        /* ============================================================ */
         .stories-section {
             padding: 80px 0;
         }
@@ -615,7 +614,6 @@
         </div>
     </section>
 
-    <!-- 1. МИССИЯ -->
     <section class="section container">
         <span class="eyebrow green reveal">Наша миссия</span>
         <h2 class="section-title reveal" data-delay="100">Что для нас важно</h2>
@@ -639,7 +637,6 @@
         </div>
     </section>
 
-    <!-- 2. ИСТОРИЯ ПРИЮТА -->
     <section class="timeline-section">
         <div class="container">
             <span class="eyebrow reveal">Наша история</span>
@@ -682,7 +679,6 @@
         </div>
     </section>
 
-    <!-- 3. ИХ СУДЬБЫ ИЗМЕНИЛИСЬ -->
     <section class="stories-section">
         <div class="container">
             <span class="eyebrow reveal">Истории спасения</span>
@@ -708,7 +704,6 @@
         </div>
     </section>
 
-    <!-- 4. ЧЕМ ЗАНИМАЕТСЯ ПРИЮТ -->
     <section class="work-section">
         <div class="container">
             <span class="eyebrow reveal">Наша работа</span>
@@ -739,7 +734,6 @@
         </div>
     </section>
 
-    <!-- 5. НАШИ РЕЗУЛЬТАТЫ -->
     <section class="stats-section">
         <div class="stats-bg">
             <div class="container">
@@ -756,7 +750,6 @@
         </div>
     </section>
 
-    <!-- 6. ЦИТАТА АННЫ -->
     <section class="quote-section">
         <div class="container">
             <div class="quote-box reveal-zoom">
@@ -772,7 +765,6 @@
         </div>
     </section>
 
-    <!-- 7. НАША КОМАНДА -->
     <section class="section container">
         <span class="eyebrow reveal">Наша команда</span>
         <h2 class="section-title reveal" data-delay="100">Люди, которые помогают</h2>
@@ -805,7 +797,6 @@
         </div>
     </section>
 
-    <!-- 8. КАК ПОМОЧЬ ПРИЮТУ -->
     <section class="help-section">
         <div class="container">
             <span class="eyebrow reveal">Присоединяйтесь</span>
